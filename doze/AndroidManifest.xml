@@ -7,20 +7,18 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="cyanogenmod.permission.MANAGE_REMOTE_PREFERENCES" />
 
     <uses-sdk
-        android:minSdkVersion="24"
-        android:targetSdkVersion="24"/>
+        android:minSdkVersion="21"
+        android:targetSdkVersion="21"/>
 
     <application
         android:label="XiaomiDoze"
         android:persistent="true">
 
-        <receiver android:name="com.cyanogenmod.settings.doze.DozeReceiver">
+        <receiver android:name="com.cyanogenmod.settings.doze.BootCompletedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="cyanogenmod.intent.action.UPDATE_PREFERENCE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -32,17 +30,16 @@
         <activity
             android:name=".DozeSettings"
             android:label="@string/ambient_display_title"
-            android:theme="@style/DozeSettings">
+            android:theme="@android:style/Theme.Material.Settings">
             <intent-filter>
-                <action android:name="org.cyanogenmod.settings.device.DOZE_SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
             </intent-filter>
             <meta-data
-                android:name="org.cyanogenmod.settings.summary.receiver"
-                android:value="com.cyanogenmod.settings.doze.DozeReceiver" />
+                android:name="com.android.settings.category"
+                android:value="com.android.settings.category.device" />
             <meta-data
-                android:name="org.cyanogenmod.settings.summary.key"
-                android:value="doze_device_settings" />
+                android:name="com.android.settings.icon"
+                android:resource="@drawable/ic_settings_doze" />
         </activity>
 
     </application>
