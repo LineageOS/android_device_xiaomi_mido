@@ -143,6 +143,7 @@ rild.libpath=/vendor/lib64/libril-qc-qmi-1.so
 rild.libargs=-d /dev/smd0
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
+ro.telephony.ril_class=MidoRIL
 ro.telephony.default_network=22,20
 ro.telephony.call_ring.multiple=false
 persist.radio.multisim.config=dsds
