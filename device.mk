@@ -107,6 +107,10 @@ PRODUCT_PACKAGES += \
     libmm-qcamera \
     Snap
 
+# Consumerir
+PRODUCT_PACKAGES += \
+    consumerir.msm8953
+
 # Display
 PRODUCT_PACKAGES += \
     copybit.msm8953 \
