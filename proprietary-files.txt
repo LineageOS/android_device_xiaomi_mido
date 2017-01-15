@@ -730,10 +730,6 @@ etc/firmware/cpp_firmware_v1_8_0.fw
 # Charger - from oxygen (MiMax 2)
 bin/hvdcp_opti|48bf0da4b6458b83b58fbb6a4681929a0a6f9ea2
 
-# Consumer Ir
-lib/hw/consumerir.msm8953.so
-lib64/hw/consumerir.msm8953.so
-
 # DPM - from oxygen (MiMax 2)
 bin/dpmd|ec3c19d3eadf958c9718dacc92910d2133f9dc88
 etc/dpm/dpm.conf|4044e359cfde5a4e8c1ef31a684b3009bca31058
