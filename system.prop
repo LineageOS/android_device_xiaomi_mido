@@ -46,6 +46,7 @@ persist.camera.stats.test=5
 persist.camera.feature.cac=1
 persist.camera.imglib.cac3=2
 camera.lowpower.record.enable=1
+persist.camera.gyro.disable=0
 camera.hal1.packagelist=com.skype.raider,com.google.android.talk
 
 # Cne
@@ -127,6 +128,7 @@ rild.libargs=-d /dev/smd0
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
 ro.telephony.default_network=22,22
+ro.telephony.call_ring.multiple=false
 persist.radio.multisim.config=dsds
 persist.radio.sib16_support=1
 persist.radio.custom_ecc=1
@@ -153,9 +155,15 @@ telephony.lteOnCdmaDevice=1
 # Time Services
 persist.timed.enable=true
 
+# Tcp
+net.tcp.2g_init_rwnd=10
+
 # Trim properties
 ro.sys.fw.use_trim_settings=true
 ro.sys.fw.empty_app_percent=50
 ro.sys.fw.trim_empty_percent=100
 ro.sys.fw.trim_cache_percent=100
 ro.sys.fw.trim_enable_memory=2147483648
+
+# Wifi
+wifi.interface=wlan0

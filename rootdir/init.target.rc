@@ -27,64 +27,18 @@
 #
 #
 
-import init.carrier.rc
-
 on early-init
     mkdir /firmware 0771 system system
     mkdir /system 0777 root root
     symlink /data/tombstones /tombstones
     mkdir /dsp 0771 media media
-    mkdir /cust 0775 system system
-on post-fs
-    export LD_PRELOAD libNimsWrap.so
-
-on init
-    mkdir /cust 0771 system system
 
 on fs
-    wait /dev/block/bootdevice
-
     mount_all fstab.qcom
-#    write /proc/sys/vm/swappiness 100
-
-    # Keeping following partitions outside fstab file. As user may not have
-    # these partition flashed on the device. Failure to mount any partition in fstab file
-    # results in failure to launch late-start class.
-
-    wait /dev/block/bootdevice/by-name/cache
-    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
-
-    wait /dev/block/bootdevice/by-name/persist
-    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
-    mkdir /persist/data 0700 system system
-    restorecon_recursive /persist
-
-    wait /dev/block/bootdevice/by-name/dsp
-    mount ext4 /dev/block/bootdevice/by-name/dsp /dsp nosuid nodev barrier=1
-    restorecon_recursive /dsp
-
-    wait /dev/block/bootdevice/by-name/modem
-    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-	#write /sys/kernel/boot_adsp/boot 1
 
     wait /dev/block/bootdevice/by-name/oem
     mount ext4 /dev/block/bootdevice/by-name/oem /oem ro nosuid nodev barrier=1
     
-    wait /dev/block/platform/soc/7824900.sdhci/by-name/cust
-    mount ext4 /dev/block/platform/soc/7824900.sdhci/by-name/cust  /cust rw nosuid nodev barrier=1
-    chown system system /cust
-    chmod 0775 /cust
-
-on post-fs
-    # We chown/chmod /cust again so because mount is run as root + defaults
-    chown system system /cust
-    chmod 0771 /cust
-    # We restorecon /cust in case the cust partition has been reset.
-    restorecon_recursive /cust
-
-    # create the lost+found directories, so as to enforce our permissions
-    mkdir /cust/lost+found 0770 root root
-
 on post-fs-data
     mkdir /data/tombstones 0771 system system
     mkdir /tombstones/modem 0771 system system
@@ -138,17 +92,6 @@ service qseecomd /system/bin/qseecomd
    user root
    group root
 
-#service aostlmd /system/bin/aostlmd
-#   class late_start
-#   user system
-#   group system net_raw
-
-service perfd /system/vendor/bin/perfd
-   class main
-   user root
-   disabled
-   writepid /dev/cpuset/system-background/tasks
-
 service thermal-engine /system/vendor/bin/thermal-engine
    class main
    user root
@@ -170,15 +113,6 @@ service audiod /system/bin/audiod
 on boot
     start rmt_storage
     insmod /system/lib/modules/adsprpc.ko
-# access permission for secure touch
-    chmod 0660 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
-    chmod 0440 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
-    chmod 0660 /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
-    chmod 0440 /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
-    chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
-    chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
-    chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
-    chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -307,11 +241,6 @@ service energy-awareness /system/bin/energy-awareness
     user root
     group system
     oneshot
-
-#service mdtpd /system/vendor/bin/mdtpd
-#    class late_start
-#    user root
-#    group system radio drmrpc
 
 service mtservice /system/bin/mtd
     class late_start
@@ -493,8 +422,6 @@ on boot
     write /dev/cpuset/background/cpus 0-1
     write /dev/cpuset/system-background/cpus 0-3
 
-    write /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/fw_name PR1702898-s3528t_00260005_00380008.img
-    write /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/update_fw 1
     chown system system /sys/class/leds/blue/status
     chown system system /sys/class/leds/red/status
     chown system system /sys/class/leds/green/status
