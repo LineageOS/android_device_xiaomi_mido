@@ -130,9 +130,6 @@ TARGET_RECOVERY_DEVICE_MODULES := libinit_mido
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
 
-# Lights
-TARGET_PROVIDES_LIBLIGHT := true
-
 # Malloc
 MALLOC_IMPL := dlmalloc
 
