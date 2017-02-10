@@ -123,6 +123,13 @@ PRODUCT_PACKAGES += \
     ethertypes \
     libebtc
 
+# FM
+PRODUCT_PACKAGES += \
+    FM2 \
+    libfmjni \
+    libqcomfm_jni \
+    qcom.fmradio
+
 # GPS
 PRODUCT_PACKAGES += \
     libcurl
