@@ -1626,6 +1626,7 @@ bin/imsdatadaemon
 bin/imsqmidaemon
 etc/permissions/imscm.xml
 framework/imscmlibrary.jar
+framework/rcsimssettings.jar
 lib64/libimscamera_jni.so
 lib64/libimsmedia_jni.so
 -priv-app/ims/ims.apk
