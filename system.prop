@@ -85,6 +85,11 @@ ro.fm.transmitter=false
 # Frp
 ro.frp.pst=/dev/block/bootdevice/by-name/config
 
+# GPS
+persist.gps.qc_nlp_in_use=1
+persist.loc.nlp_name=com.qualcomm.location
+ro.gps.agps_provider=1
+
 # Media
 media.msm8956hw=0
 mm.enable.smoothstreaming=true
