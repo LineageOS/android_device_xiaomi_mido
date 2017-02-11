@@ -1305,16 +1305,17 @@ vendor/lib64/libtzdrmgenprov.so
 
 # Fingerprint
 bin/gx_fpd
-bin/fingerprintd
 lib64/libcom_fingerprints_service.so
 lib64/hw/fingerprint.searchf.so
 lib64/hw/gxfingerprint.default.so
 lib64/hw/fingerprint.goodix.so
 lib/libcom_fingerprints_service.so
+lib/libhardware.so
 lib/hw/fingerprint.searchf.so
 lib64/libfp_client.so
 lib64/libfpservice.so
 lib64/libfpnav.so
+lib64/libhardware.so
 
 # FM
 bin/fm_qsoc_patches
