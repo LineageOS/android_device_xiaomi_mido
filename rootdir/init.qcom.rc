@@ -1015,3 +1015,5 @@ on property:sys.fp.onstart=1
    setprop goodix.fp.miui.token 0
    setprop ro.boot.fpsensor gdx
 
+service displayfeature /system/bin/displayfeature
+    class main
