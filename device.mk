@@ -191,6 +191,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     power.msm8953
 
+# QMI
+PRODUCT_PACKAGES += \
+    libjson
+
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.qcom \
