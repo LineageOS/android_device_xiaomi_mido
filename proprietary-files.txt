@@ -1318,12 +1318,12 @@ lib64/hw/fingerprint.searchf.so
 lib64/hw/gxfingerprint.default.so
 lib64/hw/fingerprint.goodix.so
 lib/libcom_fingerprints_service.so
-lib/libhardware.so
+#lib/libhardware.so
 lib/hw/fingerprint.searchf.so
 lib64/libfp_client.so
 lib64/libfpservice.so
 lib64/libfpnav.so
-lib64/libhardware.so
+#lib64/libhardware.so
 
 # FM
 bin/fm_qsoc_patches
@@ -1475,8 +1475,6 @@ etc/firmware/a530v3_seq.fw2
 
 # Ipacm
 bin/ipacm-diag
--bin/ipacm
-etc/IPACM_cfg.xml
 
 # Keystore
 vendor/lib/hw/keystore.msm8953.so
