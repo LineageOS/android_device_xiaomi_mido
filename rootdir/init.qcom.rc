@@ -174,6 +174,10 @@ on boot
     # bond0 used by FST Manager
     chown wifi wifi /sys/class/net/bond0/bonding/queue_id
 
+    # For FPC fingerprint
+    chown /sys/devices/soc/soc:fpc_fpc1020/ompatible_all
+    chmod 0664 /sys/devices/soc/soc:fpc_fpc1020/ompatible_all
+
     # Goodix Fingerprint
     chown system system /dev/goodix_fp
     chmod 0644 /dev/goodix_fp
