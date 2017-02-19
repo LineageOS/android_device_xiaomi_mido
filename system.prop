@@ -8,6 +8,7 @@ voice.record.conc.disabled=false
 voice.voip.conc.disabled=true
 voice.conc.fallbackpath=deep-buffer
 audio.parser.ip.buffer.size=262144
+audio_hal.period_size=192
 ro.qc.sdk.audio.ssr=false
 ro.qc.sdk.audio.fluencetype=fluence
 persist.audio.fluence.voicecall=true

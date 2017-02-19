@@ -53,6 +53,7 @@
         <param key="spkr_2_tz_name" value=""/>
     </config_params>
     <acdb_ids>
+        <device name="SND_DEVICE_IN_VOICE_SPEAKER_MIC" acdb_id="42"/>
         <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED" acdb_id="136"/>
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED" acdb_id="136"/>
         <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED_VBAT" acdb_id="136"/>
