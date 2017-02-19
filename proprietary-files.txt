@@ -1456,6 +1456,7 @@ vendor/lib64/libsdm-color.so
 vendor/lib64/libsdm-diag.so
 vendor/lib64/libsdm-disp-apis.so
 vendor/lib64/libsdmextension.so
+vendor/lib64/libuiblur.so|4b3fabf5ded7c4af531abde681676fc5e9248494
 
 # Graphics firmware
 etc/firmware/a506_zap.b00
