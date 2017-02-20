@@ -1262,8 +1262,8 @@ etc/firmware/cpp_firmware_v1_1_6.fw
 bin/hvdcp_opti
 
 # Consumer Ir
-#lib64/hw/consumerir.msm8953.so
-#lib/hw/consumerir.msm8953.so
+lib64/hw/consumerir.msm8953.so
+lib/hw/consumerir.msm8953.so
 
 # DPM
 bin/dpmd
