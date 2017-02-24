@@ -90,7 +90,6 @@
     <ctl name="SpkrMono BOOST Switch" value="1" />
     <ctl name="EAR PA Gain" value="POS_1P5_DB" />
     <ctl name="EAR PA Boost" value="ENABLE" />
-    <ctl name="Speaker Boost" value="DISABLE" />
     <ctl name="MI2S_RX Channels" value="One" />
     <ctl name="MI2S_TX Channels" value="One" />
     <ctl name="PRI_MI2S_RX_DL_HL Switch" value="0" />
@@ -388,7 +387,6 @@
         <path name="compress-offload-playback2 usb-headphones" />
         <path name="compress-offload-playback2" />
     </path>
-
 
     <path name="compress-offload-playback3">
         <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia10" value="1" />
@@ -969,7 +967,7 @@
     </path>
 
     <path name="wsa-speaker-and-line">
-        <path name="wsa-speaker" />
-        <path name="headphones" />
+          <path name="wsa-speaker-and-headphones" />
     </path>
+
 </mixer>

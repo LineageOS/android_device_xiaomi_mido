@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-    Copyright (c) 2015-16, The Linux Foundation. All rights reserved.
+    Copyright (c) 2015, The Linux Foundation. All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are
@@ -258,7 +258,7 @@
     <ctl name="RX INT2 DEM MUX" value="CLSH_DSM_OUT" />
     <ctl name="SLIM_0_RX Channels" value="One" />
     <ctl name="SLIM_0_TX Channels" value="One" />
-    <ctl name="SLIM RX0 MUX" value="ZERO" />
+    <ctl name="SLIM RX0 MUX" value="AIF_MIX1_PB" />
     <ctl name="SLIM RX3 MUX" value="ZERO" />
     <ctl name="SLIM RX4 MUX" value="ZERO" />
     <ctl name="EAR PA Gain" value="G_6_DB" />

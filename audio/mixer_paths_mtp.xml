@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-    Copyright (c) 2015-16, The Linux Foundation. All rights reserved.
+    Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are
@@ -1121,7 +1121,7 @@
 
     <path name="speaker-and-headphones">
         <path name="speaker" />
-	<ctl name="RX3 Digital Volume" value="84" />
+        <ctl name="RX3 Digital Volume" value="84" />
         <path name="headphones" />
     </path>
 
@@ -1275,6 +1275,14 @@
         <path name="adc1" />
     </path>
 
+    <path name="unprocessed-handset-mic">
+        <path name="handset-mic" />
+    </path>
+
+    <path name="unprocessed-mic">
+        <path name="unprocessed-handset-mic" />
+    </path>
+
     <path name="ADSP testfwk">
         <ctl name="MI2S_DL_HL Switch" value="1" />
     </path>
@@ -1298,8 +1306,7 @@
     </path>
 
     <path name="wsa-speaker-and-line">
-        <path name="wsa-speaker" />
-        <path name="headphones" />
+          <path name="wsa-speaker-and-headphones" />
     </path>
 
 </mixer>

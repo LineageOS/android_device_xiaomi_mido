@@ -86,7 +86,6 @@
     <ctl name="SPK" value="ZERO" />
     <ctl name="MICBIAS CAPLESS Switch" value="0" />
     <ctl name="EAR PA Boost" value="DISABLE" />
-    <ctl name="Speaker Boost" value="DISABLE" />
     <ctl name="EAR PA Gain" value="POS_6_DB" />
     <ctl name="MI2S_RX Channels" value="One" />
     <ctl name="MI2S_TX Channels" value="One" />
