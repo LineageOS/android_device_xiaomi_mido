@@ -260,7 +260,7 @@ case "$target" in
              hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
         fi
         case "$soc_id" in
-             "294" | "295" | "303" | "307" | "308" | "309" | "313")
+             "294" | "295" | "303" | "307" | "308" | "309" | "313" | "320")
                   case "$hw_platform" in
                        "Surf")
                                     setprop qemu.hw.mainkeys 0
@@ -334,3 +334,17 @@ fi
 cp /firmware/image/modem_pr/mbn_ota.txt /data/misc/radio/modem_config
 chown radio.radio /data/misc/radio/modem_config/mbn_ota.txt
 echo 1 > /data/misc/radio/copy_complete
+
+#check build variant for printk logging
+#current default minimum boot-time-default
+buildvariant=`getprop ro.build.type`
+case "$buildvariant" in
+    "userdebug" | "eng")
+        #set default loglevel to KERN_INFO
+        echo "6 6 1 7" > /proc/sys/kernel/printk
+        ;;
+    *)
+        #set default loglevel to KERN_WARNING
+        echo "4 4 1 4" > /proc/sys/kernel/printk
+        ;;
+esac

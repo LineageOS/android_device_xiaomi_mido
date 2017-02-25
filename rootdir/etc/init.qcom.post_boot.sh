@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, 2016, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -55,6 +55,18 @@ function configure_memory_parameters() {
     MemTotal=${MemTotalStr:16:8}
     MemTotalPg=$((MemTotal / 4))
     adjZeroMinFree=18432
+    # Read adj series and set adj threshold for PPR and ALMK.
+    # This is required since adj values change from framework to framework.
+    adj_series=`cat /sys/module/lowmemorykiller/parameters/adj`
+    adj_1="${adj_series#*,}"
+    set_almk_ppr_adj="${adj_1%%,*}"
+    # PPR and ALMK should not act on HOME adj and below.
+    # Normalized ADJ for HOME is 6. Hence multiply by 6
+    # ADJ score represented as INT in LMK params, actual score can be in decimal
+    # Hence add 6 considering a worst case of 0.9 conversion to INT (0.9*6).
+    set_almk_ppr_adj=$(((set_almk_ppr_adj * 6) + 6))
+    echo $set_almk_ppr_adj > /sys/module/lowmemorykiller/parameters/adj_max_shift
+    echo $set_almk_ppr_adj > /sys/module/process_reclaim/parameters/min_score_adj
     echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
     echo 70 > /sys/module/process_reclaim/parameters/pressure_max
     echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
@@ -877,7 +889,6 @@ case "$target" in
                 echo 50000 > /proc/sys/kernel/sched_freq_dec_notify
 
                 # Enable core control
-                insmod /system/lib/modules/core_ctl.ko
                 echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
                 echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
                 echo 68 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
@@ -1078,8 +1089,6 @@ case "$target" in
                 echo 50000 > /proc/sys/kernel/sched_freq_dec_notify
 
                 # Enable core control
-                insmod /system/lib/modules/core_ctl.ko
-                #for 8976
                 echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
                 echo 4 > /sys/devices/system/cpu/cpu4/core_ctl/max_cpus
                 echo 68 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
@@ -1126,7 +1135,6 @@ case "$target" in
                 #scheduler settings
                 echo 3 > /proc/sys/kernel/sched_window_stats_policy
                 echo 3 > /proc/sys/kernel/sched_ravg_hist_size
-
                 #task packing settings
                 echo 0 > /sys/devices/system/cpu/cpu0/sched_static_cpu_pwr_cost
                 echo 0 > /sys/devices/system/cpu/cpu1/sched_static_cpu_pwr_cost
@@ -1224,126 +1232,6 @@ case "$target" in
 			# Register specifies CPR mode change state and also #online cores input to CPR HW
 			echo 0xb018798 1 > $DCC_PATH/config
 
-			# 0x0B1112C8 APCS_ALIAS0_L2_MAS_STS
-			echo 0x0b1112c8 1 > $DCC_PATH/config
-
-			# 0x0B1880C8 APCS_ALIAS0_MAS_STS
-			echo 0x0b1880c8 1 > $DCC_PATH/config
-
-			# 0x0B1980C8 APCS_ALIAS1_MAS_STS
-			echo 0x0b1980c8 1 > $DCC_PATH/config
-
-			# 0x0B1A80C8 APCS_ALIAS2_MAS_STS
-			echo 0x0b1a80c8 1 > $DCC_PATH/config
-
-			# 0x0B1B80C8 APCS_ALIAS3_MAS_STS
-			echo 0x0b1b80c8 1 > $DCC_PATH/config
-
-			# 0x0B0112C8 APCS_ALIAS1_L2_MAS_STS
-			echo 0x0b0112c8 1 > $DCC_PATH/config
-
-			# 0x0B0880C8 APCS_ALIAS4_MAS_STS
-			echo 0x0b0880c8 1 > $DCC_PATH/config
-
-			# 0x0B0980C8 APCS_ALIAS5_MAS_STS
-			echo 0x0b0980c8 1 > $DCC_PATH/config
-
-			# 0x0B0A80C8 APCS_ALIAS6_MAS_STS
-			echo 0x0b0a80c8 1 > $DCC_PATH/config
-
-			# 0x0B0B80C8 APCS_ALIAS7_MAS_STS
-			echo 0x0b0b80c8 1 > $DCC_PATH/config
-
-			# 0x0B112C0C APCLUS0_L2_SAW4_SPM_STS
-			echo 0x0b112c0c 1 > $DCC_PATH/config
-
-			# 0x0B189C0C APCS_ALIAS0_SAW4_SPM_STS
-			echo 0x0b189c0c 1 > $DCC_PATH/config
-
-			# 0x0B199C0C APCS_ALIAS1_SAW4_SPM_STS
-			echo 0x0b199c0c 1 > $DCC_PATH/config
-
-			# 0x0B1A9C0C APCS_ALIAS2_SAW4_SPM_STS
-			echo 0x0b1a9c0c 1 > $DCC_PATH/config
-
-			# 0x0B1B9C0C APCS_ALIAS3_SAW4_SPM_STS
-			echo 0x0b1b9c0c 1 > $DCC_PATH/config
-
-			# 0x0B012C0C APCLUS1_L2_SAW4_SPM_STS
-			echo 0x0b012c0c 1 > $DCC_PATH/config
-
-			# 0x0B089C0C APCS_ALIAS4_SAW4_SPM_STS
-			echo 0x0b089c0c 1 > $DCC_PATH/config
-
-			# 0x0B099C0C APCS_ALIAS5_SAW4_SPM_STS
-			echo 0x0b099c0c 1 > $DCC_PATH/config
-
-			# 0x0B0A9C0C APCS_ALIAS6_SAW4_SPM_STS
-			echo 0x0b0a9c0c 1 > $DCC_PATH/config
-
-			# 0x0B0B9C0C APCS_ALIAS7_SAW4_SPM_STS
-			echo 0x0b0b9c0c 1 > $DCC_PATH/config
-
-			# 0x0B1D2C0C CCI_SAW4_SPM_STS
-			echo 0x0b1d2c0c 1 > $DCC_PATH/config
-
-			# 0x0B188008 APCS_ALIAS0_APC_PWR_STATUS
-			echo 0x0b188008 1 > $DCC_PATH/config
-
-			# 0x0B198008 APCS_ALIAS1_APC_PWR_STATUS
-			echo 0x0b198008 1 > $DCC_PATH/config
-
-			# 0x0B1A8008 APCS_ALIAS2_APC_PWR_STATUS
-			echo 0x0b1a8008 1 > $DCC_PATH/config
-
-			# 0x0B1B8008 APCS_ALIAS3_APC_PWR_STATUS
-			echo 0x0b1b8008 1 > $DCC_PATH/config
-
-			# 0x0B111018 APCS_ALIAS0_L2_PWR_STATUS
-			echo 0x0b111018 1 > $DCC_PATH/config
-
-			# 0x0B088008 APCS_ALIAS4_APC_PWR_STATUS
-			echo 0x0b088008 1 > $DCC_PATH/config
-
-			# 0x0B098008 APCS_ALIAS5_APC_PWR_STATUS
-			echo 0x0b098008 1 > $DCC_PATH/config
-
-			# 0x0B0A8008 APCS_ALIAS6_APC_PWR_STATUS
-			echo 0x0b0a8008 1 > $DCC_PATH/config
-
-			# 0x0B0B8008 APCS_ALIAS7_APC_PWR_STATUS
-			echo 0x0b0b8008 1 > $DCC_PATH/config
-
-			# 0x0B011018 APCS_ALIAS1_L2_PWR_STATUS
-			echo 0x0b011018 1 > $DCC_PATH/config
-
-			# 0x0B111240 APCS_ALIAS0_CORE_HS_STATE
-			echo 0x0b111240 1 > $DCC_PATH/config
-
-			# 0x0B011240 APCS_ALIAS1_CORE_HS_STATE
-			echo 0x0b011240 1 > $DCC_PATH/config
-
-			# 0x0B1112B4 APCS_ALIAS0_DX_FSM_STATUS
-			echo 0x0b1112b4 1 > $DCC_PATH/config
-
-			# 0x0B0112B4 APCS_ALIAS1_DX_FSM_STATUS
-			echo 0x0b0112b4 1 > $DCC_PATH/config
-
-			# 0x0B1D1228 APCS_COMMON_FIRST_CORE_HANG
-			echo 0x0b1d1228 1 > $DCC_PATH/config
-
-			# 0x0B116314 APCS_C0_VMIN_SHALLOW_STATUS_REGISTER
-			echo 0x0b116314 1 > $DCC_PATH/config
-
-			# 0x0B116318 APCS_C0_VMIN_DEEP_STATUS_REGISTER
-			echo 0x0b116318 1 > $DCC_PATH/config
-
-			# 0x0B11631C APCS_C0_PERF_BOOST_SHALLOW_STATUS_REGISTER
-			echo 0x0b11631c 1 > $DCC_PATH/config
-
-			# 0x0B116320 APCS_C0_PERF_BOOST_DEEP_STATUS_REGISTER
-			echo 0x0b116320 1 > $DCC_PATH/config
-
 			echo  1 > $DCC_PATH/enable
 		done
 
@@ -1413,8 +1301,9 @@ case "$target" in
                 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
                 # SMP scheduler
-                echo 100 > /proc/sys/kernel/sched_upmigrate
-                echo 100 > /proc/sys/kernel/sched_downmigrate
+                echo 85 > /proc/sys/kernel/sched_upmigrate
+                echo 85 > /proc/sys/kernel/sched_downmigrate
+                echo 19 > /proc/sys/kernel/sched_upmigrate_min_nice
 
                 # Enable sched guided freq control
                 echo 1 > /sys/devices/system/cpu/cpufreq/interactive/use_sched_load
@@ -1445,7 +1334,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-           "303" | "307" | "308" | "309" )
+           "303" | "307" | "308" | "309" | "320" )
 
                   # Start Host based Touch processing
                   case "$hw_platform" in
@@ -1453,13 +1342,16 @@ case "$target" in
                         start hbtp
                         ;;
                   esac
-                # Apply Scheduler and Governor settings for 8917
+                # Apply Scheduler and Governor settings for 8917 / 8920
 
                 # HMP scheduler settings
                 echo 3 > /proc/sys/kernel/sched_window_stats_policy
                 echo 3 > /proc/sys/kernel/sched_ravg_hist_size
                 echo 20000000 > /proc/sys/kernel/sched_ravg_window
                 echo 1 > /proc/sys/kernel/sched_restrict_tasks_spread
+
+                #disable sched_boost in 8917
+                echo 0 > /proc/sys/kernel/sched_boost
 
                 # HMP Task packing settings
                 echo 20 > /proc/sys/kernel/sched_small_task
@@ -1477,6 +1369,9 @@ case "$target" in
                 echo 0 > /sys/devices/system/cpu/cpu1/sched_prefer_idle
                 echo 0 > /sys/devices/system/cpu/cpu2/sched_prefer_idle
                 echo 0 > /sys/devices/system/cpu/cpu3/sched_prefer_idle
+
+		# core_ctl is not needed for 8917. Disable it.
+		echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/disable
 
                 for devfreq_gov in /sys/class/devfreq/qcom,mincpubw*/governor
                 do
@@ -1567,6 +1462,9 @@ case "$target" in
                 echo 3 > /proc/sys/kernel/sched_window_stats_policy
                 echo 3 > /proc/sys/kernel/sched_ravg_hist_size
                 echo 20000000 > /proc/sys/kernel/sched_ravg_window
+
+                #disable sched_boost in 8937
+                echo 0 > /proc/sys/kernel/sched_boost
 
                 # HMP Task packing settings
                 echo 20 > /proc/sys/kernel/sched_small_task
@@ -1680,7 +1578,6 @@ case "$target" in
                 echo 50000 > /proc/sys/kernel/sched_freq_dec_notify
 
                 # Enable core control
-                insmod /system/lib/modules/core_ctl.ko
                 echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
                 echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
                 echo 68 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
@@ -1697,7 +1594,6 @@ case "$target" in
                 echo 1 > /proc/sys/kernel/power_aware_timer_migration
                 # Set Memory parameters
                 configure_memory_parameters
-
             ;;
             *)
 
@@ -2025,12 +1921,12 @@ case "$target" in
         echo "interactive" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
         echo 1 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/use_sched_load
         echo 1 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/use_migration_notif
-        echo "19000 1400000:39000 1700000:19000" > /sys/devices/system/cpu/cpu2/cpufreq/interactive/above_hispeed_delay
+        echo "19000 1400000:39000 1700000:19000 2100000:79000" > /sys/devices/system/cpu/cpu2/cpufreq/interactive/above_hispeed_delay
         echo 90 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/go_hispeed_load
         echo 20000 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/timer_rate
         echo 1248000 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/hispeed_freq
         echo 1 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/io_is_busy
-        echo "85 1500000:90 1800000:70" > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+        echo "85 1500000:90 1800000:70 2100000:95" > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
         echo 19000 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/min_sample_time
         echo 79000 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/max_freq_hysteresis
         echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
@@ -2047,8 +1943,8 @@ case "$target" in
         # Setting b.L scheduler parameters
         echo 0 > /proc/sys/kernel/sched_boost
         echo 1 > /proc/sys/kernel/sched_migration_fixup
-        echo 95 > /proc/sys/kernel/sched_upmigrate
-        echo 90 > /proc/sys/kernel/sched_downmigrate
+        echo 45 > /proc/sys/kernel/sched_downmigrate
+        echo 45 > /proc/sys/kernel/sched_upmigrate
         echo 400000 > /proc/sys/kernel/sched_freq_inc_notify
         echo 400000 > /proc/sys/kernel/sched_freq_dec_notify
         echo 3 > /proc/sys/kernel/sched_spill_nr_run
@@ -2077,6 +1973,7 @@ case "$target" in
             echo "mem_latency" > $memlat/governor
             echo 10 > $memlat/polling_interval
         done
+        echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 	soc_revision=`cat /sys/devices/soc0/revision`
 	if [ "$soc_revision" == "2.0" ]; then
@@ -2100,6 +1997,128 @@ case "$target" in
 	echo N > /sys/module/lpm_levels/parameters/sleep_disabled
         # Starting io prefetcher service
         start iop
+    ;;
+esac
+
+case "$target" in
+    "msmcobalt")
+	soc_revision=`cat /sys/devices/soc0/revision`
+	if [ "$soc_revision" == "1.0" ]; then
+		# Retention modes on v1.x are experimental but not PoR
+		# C2d, D2d, D2e retention modes are disbled
+		echo N > /sys/module/lpm_levels/system/pwr/cpu0/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/cpu1/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/cpu2/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/cpu3/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu4/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu5/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu6/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu7/ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-dynret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-ret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/perf-l2-dynret/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/perf-l2-ret/idle_enabled
+		#Enable all LPMs by default
+	fi
+
+	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
+	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
+	echo 30 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
+	echo 100 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
+	echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster
+	echo 4 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
+
+	# Setting b.L scheduler parameters
+	echo 1 > /proc/sys/kernel/sched_migration_fixup
+	echo 95 > /proc/sys/kernel/sched_upmigrate
+	echo 90 > /proc/sys/kernel/sched_downmigrate
+	echo 0 > /proc/sys/kernel/sched_select_prev_cpu_us
+	echo 400000 > /proc/sys/kernel/sched_freq_inc_notify
+	echo 400000 > /proc/sys/kernel/sched_freq_dec_notify
+	echo 5 > /proc/sys/kernel/sched_spill_nr_run
+	echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
+	start iop
+	# configure governor settings for little cluster
+	echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
+	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_migration_notif
+	echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+	echo 90 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+	echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+	echo 1190400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+	echo "83 1804800:95" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+	echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+	echo 79000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis
+	echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/ignore_hispeed_on_notif
+	# configure governor settings for big cluster
+	echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_sched_load
+	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_migration_notif
+	echo 19000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+	echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+	echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+	echo 1536000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
+	echo "83 1939200:90 2016000:95" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+	echo 19000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+	echo 79000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
+	echo 300000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/ignore_hispeed_on_notif
+
+        # Enable input boost configuration
+        echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
+        echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
+        # Enable bus-dcvs
+        for cpubw in /sys/class/devfreq/*qcom,cpubw*
+        do
+            echo "bw_hwmon" > $cpubw/governor
+            echo 50 > $cpubw/polling_interval
+            echo 1525 > $cpubw/min_freq
+            echo "3143 5859 11863 13763" > $cpubw/bw_hwmon/mbps_zones
+            echo 4 > $cpubw/bw_hwmon/sample_ms
+            echo 34 > $cpubw/bw_hwmon/io_percent
+            echo 20 > $cpubw/bw_hwmon/hist_memory
+            echo 10 > $cpubw/bw_hwmon/hyst_length
+            echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
+            echo 34 > $cpubw/bw_hwmon/low_power_io_percent
+            echo 20 > $cpubw/bw_hwmon/low_power_delay
+            echo 0 > $cpubw/bw_hwmon/guard_band_mbps
+            echo 250 > $cpubw/bw_hwmon/up_scale
+            echo 1600 > $cpubw/bw_hwmon/idle_mbps
+        done
+
+        for memlat in /sys/class/devfreq/*qcom,memlat-cpu*
+        do
+            echo "mem_latency" > $memlat/governor
+            echo 10 > $memlat/polling_interval
+            echo 400 > $memlat/mem_latency/ratio_ceil
+        done
+        echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+	if [ -f /sys/devices/soc0/soc_id ]; then
+		soc_id=`cat /sys/devices/soc0/soc_id`
+	else
+		soc_id=`cat /sys/devices/system/soc/soc0/id`
+	fi
+
+	if [ -f /sys/devices/soc0/hw_platform ]; then
+		hw_platform=`cat /sys/devices/soc0/hw_platform`
+	else
+		hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
+	fi
+
+	case "$soc_id" in
+		"292") #msmcobalt
+		# Start Host based Touch processing
+		case "$hw_platform" in
+		"QRD")
+			start hbtp
+			;;
+		esac
+	    ;;
+	esac
+	echo N > /sys/module/lpm_levels/parameters/sleep_disabled
     ;;
 esac
 
@@ -2200,38 +2219,22 @@ case "$target" in
         start mpdecision
     ;;
     "msm8916")
-        if [ -f /sys/devices/soc0/soc_id ]; then
-           soc_id=`cat /sys/devices/soc0/soc_id`
-        else
-           soc_id=`cat /sys/devices/system/soc/soc0/id`
-        fi
-        if [ $soc_id = 239 ]; then
-            setprop ro.min_freq_0 800000
-            setprop ro.min_freq_4 499200
-        else
-            setprop ro.min_freq_0 800000
-        fi
-        #start perfd after setprop
-        start perfd # start perfd on 8916 and 8939
+        setprop sys.post_boot.parsed 1
     ;;
     "msm8937" | "msm8953")
         echo 128 > /sys/block/mmcblk0/bdi/read_ahead_kb
         echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
         echo 128 > /sys/block/dm-0/queue/read_ahead_kb
         echo 128 > /sys/block/dm-1/queue/read_ahead_kb
-        rm /data/system/perfd/default_values
-        start perfd
+        setprop sys.post_boot.parsed 1
         start gamed
     ;;
     "msm8974")
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996")
-        rm /data/system/perfd/default_values
-        setprop ro.min_freq_0 384000
-        setprop ro.min_freq_4 384000
-        start perfd
+    "msm8994" | "msm8992" | "msm8996" | "msmcobalt")
+        setprop sys.post_boot.parsed 1
     ;;
     "apq8084")
         rm /data/system/perfd/default_values
@@ -2322,3 +2325,15 @@ if [ -f /sys/devices/soc0/select_image ]; then
     echo $image_variant > /sys/devices/soc0/image_variant
     echo $oem_version > /sys/devices/soc0/image_crm_version
 fi
+
+# Change console log level as per console config property
+console_config=`getprop persist.console.silent.config`
+case "$console_config" in
+    "1")
+        echo "Enable console config to $console_config"
+        echo 0 > /proc/sys/kernel/printk
+        ;;
+    *)
+        echo "Enable console config to $console_config"
+        ;;
+esac

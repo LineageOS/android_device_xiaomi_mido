@@ -34,6 +34,8 @@ on early-init
     mkdir /dsp 0771 media media
 
 on fs
+    wait /dev/block/bootdevice
+
     mount_all fstab.qcom
 
     wait /dev/block/bootdevice/by-name/oem
@@ -55,7 +57,6 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input graphics
-    writepid /dev/cpuset/system-background/tasks
 
 on init
    write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
@@ -92,6 +93,18 @@ service qseecomd /system/bin/qseecomd
    user root
    group root
 
+service perfd /system/vendor/bin/perfd
+   class main
+   user root
+   disabled
+
+service gamed /system/vendor/bin/gamed
+   class main
+   user system
+   group system
+   disabled
+   socket gamed seqpacket 0640 system system
+
 service thermal-engine /system/vendor/bin/thermal-engine
    class main
    user root
@@ -101,7 +114,7 @@ service thermal-engine /system/vendor/bin/thermal-engine
    group root
 
 service time_daemon /system/bin/time_daemon
-   class late_start
+   class main
    user root
    group root
 
@@ -146,7 +159,7 @@ service ims_rtp_daemon /system/bin/ims_rtp_daemon
 service imscmservice /system/bin/imscmservice
    class main
    user system
-   group radio net_raw diag diag log
+   group radio diag inet log
    disabled
 
 on property:sys.ims.DATA_DAEMON_STATUS=1
@@ -242,16 +255,11 @@ service energy-awareness /system/bin/energy-awareness
     group system
     oneshot
 
-service mtservice /system/bin/mtd
-    class late_start
+service getcolorid /system/bin/getcolorid
+    class core
+    oneshot
 
-service vsimservice /system/bin/vsimd
-    class late_start
-
-service mlipayservice /system/bin/mlipayd
-    class late_start
-
-# for ITO testing ----add by lw
+# add for function test
 service chmodtpon /system/bin/chmodtp o 1
     user root
     oneshot
@@ -284,7 +292,7 @@ service chmodtp3off /system/bin/chmodtp f 3
 on property:sys.chmodtp3=2
     start chmodtp3off
 
-service whiteflashon /system/bin/dualflash w 1
+service whiteflashon /system/bin/factory_bin w 1
     user root
     oneshot
     disabled
@@ -292,7 +300,7 @@ service whiteflashon /system/bin/dualflash w 1
 on property:sys.whiteflashon=1
     start whiteflashon
 
-service whiteflashoff /system/bin/dualflash w 0
+service whiteflashoff /system/bin/factory_bin w 0
     user root
     oneshot
     disabled
@@ -300,7 +308,7 @@ service whiteflashoff /system/bin/dualflash w 0
 on property:sys.whiteflashoff=1
     start whiteflashoff
 
-service yellowflashon /system/bin/dualflash y 1
+service yellowflashon /system/bin/factory_bin y 1
     user root
     oneshot
     disabled
@@ -308,7 +316,7 @@ service yellowflashon /system/bin/dualflash y 1
 on property:sys.yellowflashon=1
     start yellowflashon
 
-service yellowflashoff /system/bin/dualflash y 0
+service yellowflashoff /system/bin/factory_bin y 0
     user root
     oneshot
     disabled
@@ -316,7 +324,7 @@ service yellowflashoff /system/bin/dualflash y 0
 on property:sys.yellowflashoff=1
     start yellowflashoff
 
-service chargingenable /system/bin/dualflash c 1
+service chargingenable /system/bin/factory_bin c 1
     user root
     oneshot
     disabled
@@ -324,7 +332,7 @@ service chargingenable /system/bin/dualflash c 1
 on property:sys.charging.enable=1
     start chargingenable
 
-service chargingdisable /system/bin/dualflash c 0
+service chargingdisable /system/bin/factory_bin c 0
     user root
     oneshot
     disabled
@@ -332,97 +340,76 @@ service chargingdisable /system/bin/dualflash c 0
 on property:sys.charging.disable=1
     start chargingdisable
 
-service keylighton /system/bin/dualflash k 1
+service keylighton /system/bin/factory_bin k 1
     user root
     oneshot
     disabled
 on property:sys.keylighton=1
     start keylighton
 
-service keylightoff /system/bin/dualflash k 0
+service keylightoff /system/bin/factory_bin k 0
     user root
     oneshot
     disabled
 on property:sys.keylightoff=1
     start keylightoff
 
-service redledon /system/bin/dualflash r 1
+service redledon /system/bin/factory_bin r 1
     user root
     oneshot
     disabled
 on property:sys.redledon=1
     start redledon
 
-service redledoff /system/bin/dualflash r 0
+service redledoff /system/bin/factory_bin r 0
     user root
     oneshot
     disabled
 on property:sys.redledoff=1
     start redledoff
 
-service greenledon /system/bin/dualflash g 1
+service greenledon /system/bin/factory_bin g 1
     user root
     oneshot
     disabled
 on property:sys.greenledon=1
     start greenledon
 
-service greenledoff /system/bin/dualflash g 0
+service greenledoff /system/bin/factory_bin g 0
     user root
     oneshot
     disabled
 on property:sys.greenledoff=1
     start greenledoff
 
-service blueledon /system/bin/dualflash b 1
+service blueledon /system/bin/factory_bin b 1
     user root
     oneshot
     disabled
 on property:sys.blueledon=1
     start blueledon
 
-service blueledoff /system/bin/dualflash b 0
+service blueledoff /system/bin/factory_bin b 0
     user root
     oneshot
     disabled
 on property:sys.blueledoff=1
     start blueledoff
-
 # add end
 
-service getcolorid /system/bin/getcolorid
-   class core
-   oneshot
-
-#hq log
-service device_info /system/bin/hq_store_device_info
-    user root
-    group root
-    oneshot
-    disabled
-
-service kernel_log /system/bin/hq_store_kernel_log
-    user root
-    group root
-    oneshot
-    disabled
-
-service monitor_log /system/bin/hq_monitor_kernel_log
-    user root
-    group root
-    oneshot
-    disabled
-
-#hq log end
-
 on boot
-    # update foreground cpuset now that processors are up
-    write /dev/cpuset/foreground/cpus 0-7
-    write /dev/cpuset/foreground/boost/cpus 4-7
-    write /dev/cpuset/background/cpus 0-1
-    write /dev/cpuset/system-background/cpus 0-3
+	write /dev/cpuset/top-app/cpus 0-7
+	write /dev/cpuset/top-app/boost/cpus 4-7
+	write /dev/cpuset/foreground/cpus 0-6
+	write /dev/cpuset/foreground/boost/cpus 0-6
+	write /dev/cpuset/background/cpus 0-1
+	write /dev/cpuset/system-background/cpus 0-3
 
-    chown system system /sys/class/leds/blue/status
-    chown system system /sys/class/leds/red/status
-    chown system system /sys/class/leds/green/status
-    chown system system /sys/class/leds/flashlight/brightness
+service mtservice /system/bin/mtd
+    class late_start
+
+service vsimservice /system/bin/vsimd
+    class late_start
+
+service mlipayservice /system/bin/mlipayd
+    class late_start
