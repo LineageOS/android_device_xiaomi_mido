@@ -42,6 +42,7 @@ flac.sw.decoder.24bit.support=true
 bluetooth.hfp.client=1
 
 # Camera
+persist.camera.HAL3.enabled=1
 persist.camera.isp.clock.optmz=0
 vidc.enc.dcvs.extra-buff-count=2
 media.camera.ts.monotonic=1
