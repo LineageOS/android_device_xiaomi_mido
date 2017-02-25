@@ -101,6 +101,7 @@ static int set_notify(struct fingerprint_device *dev, fingerprint_notify_t notif
 {
     device_t *device = (device_t *) dev;
 
+    device->base.notify = notify;
     return device->vendor.device->set_notify(device->vendor.device, notify);
 }
 
@@ -138,6 +139,41 @@ static int cancel(struct fingerprint_device *dev)
     device_t *device = (device_t *) dev;
 
     return device->vendor.device->cancel(device->vendor.device);
+}
+
+#define MAX_FINGERPRINTS 100
+
+typedef int (*enumerate_2_0)(struct fingerprint_device *dev, fingerprint_finger_id_t *results,
+        uint32_t *max_size);
+
+static int enumerate_pre_2_1(struct fingerprint_device *dev)
+{
+    device_t *device = (device_t *) dev;
+    fingerprint_finger_id_t results[MAX_FINGERPRINTS];
+    uint32_t n = MAX_FINGERPRINTS;
+    enumerate_2_0 enumerate = (enumerate_2_0) device->vendor.device->enumerate;
+    int rv = enumerate(device->vendor.device, results, &n);
+
+    if (rv == 0) {
+        uint32_t i;
+        fingerprint_msg_t msg;
+
+        msg.type = FINGERPRINT_TEMPLATE_ENUMERATING;
+        for (i = 0; i < n; i++) {
+            msg.data.enumerated.finger = results[i];
+            msg.data.enumerated.remaining_templates = n - i - 1;
+            device->base.notify(&msg);
+        }
+    }
+
+    return rv;
+}
+
+static int enumerate(struct fingerprint_device *dev)
+{
+    device_t *device = (device_t *) dev;
+
+    return device->vendor.device->enumerate(device->vendor.device);
 }
 
 static int remove(struct fingerprint_device *dev, uint32_t gid, uint32_t fid)
@@ -202,6 +238,11 @@ static int device_open(const hw_module_t *module, const char *name, hw_device_t 
     device->base.post_enroll = post_enroll;
     device->base.get_authenticator_id = get_authenticator_id;
     device->base.cancel = cancel;
+    if (vendor.module->common.module_api_version >= FINGERPRINT_MODULE_API_VERSION_2_1) {
+        device->base.enumerate = enumerate;
+    } else {
+        device->base.enumerate = enumerate_pre_2_1;
+    }
     device->base.remove = remove;
     device->base.set_active_group = set_active_group;
     device->base.authenticate = authenticate;
@@ -217,7 +258,7 @@ static struct hw_module_methods_t module_methods = {
 fingerprint_module_t HAL_MODULE_INFO_SYM = {
     .common = {
         .tag = HARDWARE_MODULE_TAG,
-        .module_api_version = FINGERPRINT_MODULE_API_VERSION_2_0,
+        .module_api_version = FINGERPRINT_MODULE_API_VERSION_2_1,
         .hal_api_version = HARDWARE_HAL_API_VERSION,
         .id = FINGERPRINT_HARDWARE_MODULE_ID,
         .name = "Lineage Fingerprint Wrapper",
