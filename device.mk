@@ -152,6 +152,10 @@ PRODUCT_PACKAGES += \
     libqcomfm_jni \
     qcom.fmradio
 
+# Fs_config
+PRODUCT_PACKAGES += \
+    fs_config_files
+
 # GPS
 PRODUCT_PACKAGES += \
     libcurl
