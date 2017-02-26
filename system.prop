@@ -40,6 +40,7 @@ flac.sw.decoder.24bit.support=true
 
 # Bluetooth
 bluetooth.hfp.client=1
+qcom.bluetooth.soc=smd
 
 # Camera
 persist.camera.HAL3.enabled=1
