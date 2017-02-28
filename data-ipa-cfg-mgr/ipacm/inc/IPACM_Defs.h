@@ -75,7 +75,7 @@ extern "C"
 #define IPA_ODU_HDR_NAME_v6  "IPACM_ODU_v6"
 
 
-#define IPA_MAX_IFACE_ENTRIES 15
+#define IPA_MAX_IFACE_ENTRIES 20
 #define IPA_MAX_PRIVATE_SUBNET_ENTRIES 3
 #define IPA_MAX_ALG_ENTRIES 20
 #define IPA_MAX_RM_ENTRY 6
@@ -89,37 +89,22 @@ extern "C"
 #define WAN_DL_ROUTE_TABLE_NAME "ipa_dflt_wan_rt"
 #define V6_COMMON_ROUTE_TABLE_NAME  "COMRTBLv6"
 #define V6_WAN_ROUTE_TABLE_NAME  "WANRTBLv6"
-#define V4_LAN_TO_LAN_ROUTE_TABLE_NAME "LANTOLANRTBLv4"
-#define V6_LAN_TO_LAN_ROUTE_TABLE_NAME "LANTOLANRTBLv6"
 #define V4_ODU_ROUTE_TABLE_NAME  "ODURTBLv4"
 #define V6_ODU_ROUTE_TABLE_NAME  "ODURTBLv6"
 
-#define ETH_BRIDGE_USB_CPE_ROUTE_TABLE_NAME_V4 "ETH_BRIDGE_LAN_LAN_RTBLv4"
-#define ETH_BRIDGE_USB_WLAN_ROUTE_TABLE_NAME_V4 "ETH_BRIDGE_LAN_WLAN_RTBLv4"
-#define ETH_BRIDGE_WLAN_WLAN_ROUTE_TABLE_NAME_V4 "ETH_BRIDGE_WLAN_WLAN_RTBLv4"
-#define ETH_BRIDGE_USB_CPE_ROUTE_TABLE_NAME_V6 "ETH_BRIDGE_LAN_LAN_RTBLv6"
-#define ETH_BRIDGE_USB_WLAN_ROUTE_TABLE_NAME_V6 "ETH_BRIDGE_LAN_WLAN_RTBLv6"
-#define ETH_BRIDGE_WLAN_WLAN_ROUTE_TABLE_NAME_V6 "ETH_BRIDGE_WLAN_WLAN_RTBLv6"
-
 #define WWAN_QMI_IOCTL_DEVICE_NAME "/dev/wwan_ioctl"
 #define IPA_DEVICE_NAME "/dev/ipa"
-#define IPA_MAX_FLT_RULE 50
+#define MAX_NUM_PROP 2
 
-#define MAX_OFFLOAD_PAIR 3
-#define MAX_NUM_PROP 8
-#define IPA_LAN_TO_LAN_USB_HDR_NAME_V4 "Lan2Lan_USB_v4"
-#define IPA_LAN_TO_LAN_USB_HDR_NAME_V6 "Lan2Lan_USB_v6"
-#define IPA_LAN_TO_LAN_WLAN_HDR_NAME_V4 "Lan2Lan_Wlan_v4"
-#define IPA_LAN_TO_LAN_WLAN_HDR_NAME_V6 "Lan2Lan_Wlan_v6"
-#define IPA_LAN_TO_LAN_MAX_WLAN_CLIENT 16
-#define IPA_LAN_TO_LAN_MAX_USB_CLIENT 1
-#define IPA_LAN_TO_LAN_MAX_CPE_CLIENT 15
-#define IPA_LAN_TO_LAN_MAX_LAN_CLIENT (IPA_LAN_TO_LAN_MAX_USB_CLIENT + IPA_LAN_TO_LAN_MAX_CPE_CLIENT)
-#define IPA_LAN_TO_LAN_MAX_CLIENT (IPA_LAN_TO_LAN_MAX_LAN_CLIENT + IPA_LAN_TO_LAN_MAX_WLAN_CLIENT)
+#ifndef FEATURE_IPA_V3
+#define IPA_MAX_FLT_RULE 50
+#else
+#define IPA_MAX_FLT_RULE 100
+#endif
+
 #define TCP_FIN_SHIFT 16
 #define TCP_SYN_SHIFT 17
 #define TCP_RST_SHIFT 18
-#define NUM_TCP_CTL_FLT_RULE 3
 #define NUM_IPV6_PREFIX_FLT_RULE 1
 
 /*---------------------------------------------------------------------------
@@ -143,7 +128,7 @@ extern "C"
 ===========================================================================*/
 typedef enum
 {
-	IPA_CFG_CHANGE_EVENT = 1,                 /* NULL */
+	IPA_CFG_CHANGE_EVENT,                 /* NULL */
 	IPA_PRIVATE_SUBNET_CHANGE_EVENT,          /* ipacm_event_data_fid */
 	IPA_FIREWALL_CHANGE_EVENT,                /* NULL */
 	IPA_LINK_UP_EVENT,                        /* ipacm_event_data_fid */
@@ -182,7 +167,7 @@ typedef enum
 	IPA_TETHERING_STATS_UPDATE_EVENT,         /* ipacm_event_data_fid */
 	IPA_NETWORK_STATS_UPDATE_EVENT,           /* ipacm_event_data_fid */
 
-	IPA_EXTERNAL_EVENT_MAX = 500,
+	IPA_EXTERNAL_EVENT_MAX,
 
 	IPA_HANDLE_WAN_UP,                        /* ipacm_event_iface_up  */
 	IPA_HANDLE_WAN_DOWN,                      /* ipacm_event_iface_up  */
@@ -194,16 +179,12 @@ typedef enum
 	IPA_HANDLE_WAN_DOWN_V6_TETHER,            /* ipacm_event_iface_up_tehter */
 	IPA_HANDLE_WLAN_UP,                       /* ipacm_event_iface_up */
 	IPA_HANDLE_LAN_UP,                        /* ipacm_event_iface_up */
-	IPA_LAN_CLIENT_ACTIVE,                    /* ipacm_event_lan_client*/
-	IPA_LAN_CLIENT_INACTIVE,                  /* ipacm_event_lan_client*/
-	IPA_LAN_CLIENT_DISCONNECT,                /* ipacm_event_lan_client*/
-	IPA_LAN_CLIENT_POWER_SAVE,                /* ipacm_event_lan_client*/
-	IPA_LAN_CLIENT_POWER_RECOVER,             /* ipacm_event_lan_client*/
+	IPA_ETH_BRIDGE_IFACE_UP,                  /* ipacm_event_eth_bridge*/
+	IPA_ETH_BRIDGE_IFACE_DOWN,                /* ipacm_event_eth_bridge*/
+	IPA_ETH_BRIDGE_CLIENT_ADD,                /* ipacm_event_eth_bridge */
+	IPA_ETH_BRIDGE_CLIENT_DEL,                /* ipacm_event_eth_bridge*/
+	IPA_ETH_BRIDGE_WLAN_SCC_MCC_SWITCH,       /* ipacm_event_eth_bridge*/
 	IPA_LAN_DELETE_SELF,                      /* ipacm_event_data_fid */
-	IPA_ETH_BRIDGE_CLIENT_ADD_EVENT,          /* ipacm_event_data_mac */
-	IPA_ETH_BRIDGE_CLIENT_DEL_EVENT,          /* ipacm_event_data_mac */
-	IPA_ETH_BRIDGE_HDR_PROC_CTX_SET_EVENT,    /* ipacm_event_data_if_cat */
-	IPA_ETH_BRIDGE_HDR_PROC_CTX_UNSET_EVENT,  /* ipacm_event_data_if_cat */
 	IPACM_EVENT_MAX
 } ipa_cm_event_id;
 
@@ -277,12 +258,10 @@ typedef struct
 
 typedef struct
 {
-	enum ipa_ip_type iptype;
-	uint32_t ipv4_addr;
-	uint32_t ipv6_addr[4];
+	IPACM_Lan *p_iface;
+	ipa_ip_type iptype;
 	uint8_t mac_addr[6];
-	IPACM_Lan* p_iface;
-} ipacm_event_lan_client;
+} ipacm_event_eth_bridge;
 
 typedef struct
 {
@@ -308,6 +287,10 @@ typedef struct _ipacm_event_data_iptype
 	int if_index;
 	int if_index_tether;
 	enum ipa_ip_type iptype;
+#ifdef IPA_WAN_MSG_IPv6_ADDR_GW_LEN
+	uint32_t  ipv4_addr_gw;
+	uint32_t  ipv6_addr_gw[4];
+#endif
 } ipacm_event_data_iptype;
 
 

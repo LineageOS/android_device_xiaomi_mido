@@ -533,6 +533,16 @@ void* ipa_driver_msg_notifier(void *param)
 			ipa_get_if_index(event_wan.upstream_ifname, &(data_iptype->if_index));
 			ipa_get_if_index(event_wan.tethered_ifname, &(data_iptype->if_index_tether));
 			data_iptype->iptype = event_wan.ip;
+#ifdef IPA_WAN_MSG_IPv6_ADDR_GW_LEN
+			data_iptype->ipv4_addr_gw = event_wan.ipv4_addr_gw;
+			data_iptype->ipv6_addr_gw[0] = event_wan.ipv6_addr_gw[0];
+			data_iptype->ipv6_addr_gw[1] = event_wan.ipv6_addr_gw[1];
+			data_iptype->ipv6_addr_gw[2] = event_wan.ipv6_addr_gw[2];
+			data_iptype->ipv6_addr_gw[3] = event_wan.ipv6_addr_gw[3];
+			IPACMDBG_H("default gw ipv4 (%x)\n", data_iptype->ipv4_addr_gw);
+			IPACMDBG_H("IPV6 gateway: %08x:%08x:%08x:%08x \n",
+							data_iptype->ipv6_addr_gw[0], data_iptype->ipv6_addr_gw[1], data_iptype->ipv6_addr_gw[2], data_iptype->ipv6_addr_gw[3]);
+#endif
 			IPACMDBG_H("Received WAN_UPSTREAM_ROUTE_ADD: fid(%d) tether_fid(%d) ip-type(%d)\n", data_iptype->if_index,
 					data_iptype->if_index_tether, data_iptype->iptype);
 			evt_data.event = IPA_WAN_UPSTREAM_ROUTE_ADD_EVENT;
@@ -684,6 +694,7 @@ void* ipa_driver_msg_notifier(void *param)
 
 void IPACM_Sig_Handler(int sig)
 {
+	int cnt;
 	ipacm_cmd_q_data evt_data;
 
 	printf("Received Signal: %d\n", sig);
@@ -729,11 +740,11 @@ int main(int argc, char **argv)
 	IPACMDBG_H("In main()\n");
 	IPACM_Neighbor *neigh = new IPACM_Neighbor();
 	IPACM_IfaceManager *ifacemgr = new IPACM_IfaceManager();
-#ifndef FEATURE_ETH_BRIDGE_LE
-#ifndef FEATURE_IPA_ANDROID
+
+#ifdef FEATURE_ETH_BRIDGE_LE
 	IPACM_LanToLan* lan2lan = new IPACM_LanToLan();
-#endif /* defined(FEATURE_IPA_ANDROID)*/
 #endif
+
 	IPACM_ConntrackClient *cc = IPACM_ConntrackClient::GetInstance();
 	CtList = new IPACM_ConntrackListener();
 
