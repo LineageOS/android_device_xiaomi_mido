@@ -1649,16 +1649,34 @@ vendor/lib64/libtzdrmgenprov.so
 -etc/qdcm_calib_data_nt35596_tianma_fhd_video_mode_dsi_panel.xml
 
 # Fingerprint
-bin/gx_fpd
-lib/hw/fingerprint.searchf.so
-lib/libcom_fingerprints_service.so
-lib64/hw/fingerprint.goodix.so
-lib64/hw/fingerprint.searchf.so
-lib64/hw/gxfingerprint.default.so
-lib64/libcom_fingerprints_service.so
-lib64/libfp_client.so
-lib64/libfpnav.so
-lib64/libfpservice.so
+bin/gx_fpd|3e6075eaff9ff3dad7cddd117ff9cbc684eb60ae
+lib/hw/fingerprint.searchf.so|240254831d89934bbb32e0970b0eab7c1e902a19
+lib/libcom_fingerprints_service.so|9ddd4f6d97ccf6030297e0e70f0f4ee64f80ac30
+lib64/hw/fingerprint.goodix.so|0e5c7c0677c2671719ec34402c05d25857f5e1d3
+lib64/hw/fingerprint.searchf.so|046ae02b23a1221a4791dc57836888edf90aae5c
+lib64/hw/gxfingerprint.default.so|5b25b3e7f66886db014f6584cc65bc76315ca6cf
+lib64/libcom_fingerprints_service.so|030823a75436727e3234342c76255675d0451033
+lib64/libfp_client.so|1026d97cd1c2f585beb045a84d82f6e0351ce776
+lib64/libfpnav.so|588301735456b31b09aa0779a7f46481056868dd
+lib64/libfpservice.so|76e238f9eace33181a7e28c9b90d1fb3aef8b46f
+
+# Fingerprint Firmware
+etc/firmware/fpctzapp.b00|642a044aca8b2141aa1cba8ae5769c9487c00272
+etc/firmware/fpctzapp.b01|bfba8928d2c5df1f968606fea0dc94695975ebf7
+etc/firmware/fpctzapp.b02|3d3e0467766b877983d4fe75996f66d8d5580579
+etc/firmware/fpctzapp.b03|20ae7c5dfd3861570eb84a7e7aa41e471378a74f
+etc/firmware/fpctzapp.b04|fbf8c1c4aa8c59b6f98345bb5f85dbd13fe44233
+etc/firmware/fpctzapp.b05|d35f52f19b77f997152f75263cf357f92873a7a2
+etc/firmware/fpctzapp.b06|068c26cf789d7f60f67d7bfaf82d6be4084d9369
+etc/firmware/fpctzapp.mdt|23a534722f6c2ca18590dae6afa27805232e7437
+etc/firmware/goodixfp.b00|46b35c1a91a518728fe45d1736abd40f3e1201bb
+etc/firmware/goodixfp.b01|b501dab3813e65a9f1edfd10b94db929a1f5cafc
+etc/firmware/goodixfp.b02|2c822f2db4f1b898413df51c86786a083e8c30b7
+etc/firmware/goodixfp.b03|215daf677e3a632a4c6461c444c47121352d45e9
+etc/firmware/goodixfp.b04|64b52aa5fc8ababc62f86f1ed00e1e4d4c70599f
+etc/firmware/goodixfp.b05|b26fa494287e6a9f8e43e16028740cdcd25931d0
+etc/firmware/goodixfp.b06|baa9bf6cf667f0eac9858fee462c2b20694b61cf
+etc/firmware/goodixfp.mdt|ebe313309b24c97e780584f7ab284b254cc93492
 
 # FM
 bin/fm_qsoc_patches
