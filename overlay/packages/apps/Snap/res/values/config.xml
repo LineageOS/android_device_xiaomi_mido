@@ -30,7 +30,5 @@
     <!-- Restart preview for front camera onPictureTaken -->
     <bool name="front_camera_restart_preview_onPictureTaken">true</bool>
 
-    <!-- Enable support for camera api v2 -->
-    <bool name="support_camera_api_v2">true</bool>
 </resources>
 
