@@ -1679,9 +1679,6 @@ etc/firmware/goodixfp.b05|b26fa494287e6a9f8e43e16028740cdcd25931d0
 etc/firmware/goodixfp.b06|baa9bf6cf667f0eac9858fee462c2b20694b61cf
 etc/firmware/goodixfp.mdt|ebe313309b24c97e780584f7ab284b254cc93492
 
-# FM
-bin/fm_qsoc_patches
-
 # Gatekeeper
 vendor/lib/hw/gatekeeper.msm8953.so
 vendor/lib64/hw/gatekeeper.msm8953.so

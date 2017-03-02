@@ -146,10 +146,8 @@ PRODUCT_PACKAGES += \
 
 # FM
 PRODUCT_PACKAGES += \
-    FM2 \
-    libfmjni \
-    libqcomfm_jni \
-    qcom.fmradio
+    FMRadio \
+    libfmjni
 
 # Fs_config
 PRODUCT_PACKAGES += \
@@ -241,7 +239,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     init.qcom.bt.sh \
-    init.qcom.fm.sh \
     init.qcom.post_boot.sh
 
 # RIL
