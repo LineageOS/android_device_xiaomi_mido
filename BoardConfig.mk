@@ -151,6 +151,9 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 USE_DEVICE_SPECIFIC_GPS := true
 TARGET_NO_RPC := true
 
+# Filesystem
+TARGET_ANDROID_FILESYSTEM_CONFIG_H := $(LOCAL_PATH)/android_filesystem_config.h
+
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_mido
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
