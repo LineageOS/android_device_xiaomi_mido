@@ -17,6 +17,8 @@
 
 set -e
 
+INITIAL_COPYRIGHT_YEAR=2017
+
 # Required!
 DEVICE=mido
 VENDOR=xiaomi
