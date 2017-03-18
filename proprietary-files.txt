@@ -29,8 +29,8 @@ etc/drc/drc_cfg_AZ.txt
 etc/surround_sound_3mic/surround_sound_rec_5.1.cfg
 etc/surround_sound_3mic/surround_sound_rec_AZ.cfg
 lib/hw/audio.primary.msm8953.so
-lib64/hw/audio.primary.msm8953.so
 lib/soundfx/libdirac.so
+lib64/hw/audio.primary.msm8953.so
 vendor/etc/diracmobile.config
 vendor/lib/libacdb-fts.so
 vendor/lib/libacdbloader.so
@@ -1627,7 +1627,6 @@ bin/qseecomd
 vendor/bin/qseeproxydaemon
 vendor/lib/libQSEEComAPI.so
 vendor/lib/libcppf.so
-vendor/lib/liboemcrypto.so
 vendor/lib64/lib-sec-disp.so
 vendor/lib64/libGPTEE.so
 vendor/lib64/libGPreqcancel.so
