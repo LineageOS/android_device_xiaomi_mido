@@ -178,13 +178,20 @@ on boot
     # bond0 used by FST Manager
     chown wifi wifi /sys/class/net/bond0/bonding/queue_id
 
-    # For FPC fingerprint
-    chown /sys/devices/soc/soc:fpc_fpc1020/ompatible_all
-    chmod 0664 /sys/devices/soc/soc:fpc_fpc1020/ompatible_all
-
-    # Goodix Fingerprint
+    # Fingerprint
     chown system system /dev/goodix_fp
     chmod 0644 /dev/goodix_fp
+
+    chown system system /sys/devices/soc/soc:fpc1020/compatible_all
+    chmod 0664 /sys/devices/soc/soc:fpc1020/compatible_all
+    chown system system /sys/devices/soc/soc:fpc1020/irq
+    chmod 0660 /sys/devices/soc/soc:fpc1020/irq
+    chown system system /sys/devices/soc/soc:fpc1020/hw_reset
+    chmod 0660 /sys/devices/soc/soc:fpc1020/hw_reset
+    chown system system /sys/devices/soc/soc:fpc1020/wakeup_enable
+    chmod 0660 /sys/devices/soc/soc:fpc1020/wakeup_enable
+    chown system system /sys/devices/soc/soc:fpc1020/wakeup_enable
+    chmod 0660 /sys/devices/soc/soc:fpc1020/wakeup_enable
 
     # Notification LED
     chown system system /sys/class/leds/red/blink
@@ -259,6 +266,9 @@ on post-fs-data
 
     # Create directory used by display clients
     mkdir /data/misc/display 0770 system graphics
+
+    # Create dir for fpc
+    mkdir /data/fpc 0770 system system
 
     # Mounting of persist is moved to 'on emmc-fs' and 'on fs' sections
     # We chown/chmod /persist again so because mount is run as root + defaults
