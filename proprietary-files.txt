@@ -1627,6 +1627,7 @@ bin/qseecomd
 vendor/bin/qseeproxydaemon
 vendor/lib/libQSEEComAPI.so
 vendor/lib/libcppf.so
+vendor/lib/mediadrm/libdrmclearkeyplugin.so
 vendor/lib64/lib-sec-disp.so
 vendor/lib64/libGPTEE.so
 vendor/lib64/libGPreqcancel.so
@@ -1643,6 +1644,7 @@ vendor/lib64/libsecureui_svcsock.so
 vendor/lib64/libsecureuisvc_jni.so
 vendor/lib64/libssd.so
 vendor/lib64/libtzdrmgenprov.so
+vendor/lib64/mediadrm/libdrmclearkeyplugin.so
 
 # Display calibration
 -etc/qdcm_calib_data_nt35532_fhd_video_mode_dsi_panel.xml
@@ -1855,8 +1857,6 @@ vendor/lib64/libOmxEvrcDec.so
 vendor/lib64/libOmxQcelp13Dec.so
 vendor/lib64/libmm-color-convertor.so
 vendor/lib64/libmmosal.so
-vendor/media/LMspeed_508.emd
-vendor/media/PFFprec_600.emd
 
 # Modem
 vendor/lib/libwms.so
@@ -2038,9 +2038,6 @@ vendor/lib64/libTimeService.so
 
 # USB
 etc/firmware/ice40.bin
-
-# Widevine
-vendor/lib/mediadrm/libwvdrmengine.so
 
 # Wi-Fi
 bin/cnss-daemon
