@@ -1,0 +1,7 @@
+type gx_fpd, domain;
+type gx_fpd_exec, exec_type, file_type;
+type gx_fpd_device, dev_type;
+type gx_fpd_data_file, file_type, data_file_type;
+
+# gx_fpd
+init_daemon_domain(gx_fpd)

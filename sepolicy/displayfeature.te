@@ -1,0 +1,4 @@
+type displayfeature, domain;
+type displayfeature_exec, exec_type, file_type;
+
+init_daemon_domain(displayfeature)
