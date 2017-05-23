@@ -20,3 +20,7 @@
 
 # Display Feature
 /system/bin/displayfeature			u:object_r:displayfeature_exec:s0
+
+# Glove Mode
+/sys/class/tp_glove/tp_glove/glove_enable	u:object_r:proc_touchpanel:s0
+
