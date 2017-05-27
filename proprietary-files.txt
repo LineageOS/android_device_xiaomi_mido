@@ -143,23 +143,8 @@ vendor/lib64/libwqe.so
 vendor/lib64/libxml.so
 
 # Camera
-bin/mm-qcamera-app
 bin/mm-qcamera-daemon
-lib/hw/camera.msm8953.so
-lib/libmm-qcamera.so
-lib/libmmcamera_interface.so
-lib/libmmjpeg_interface.so
-lib/libmorpho_memory_allocator.so
-lib/libmorpho_panorama.so
-lib/libqomx_core.so
 vendor/lib/libChamomilePA.so
-vendor/lib/libFaceGrade.so
-vendor/lib/libFaceProc.so
-vendor/lib/libRecoFace.so
-vendor/lib/libarcsoft_beauty_shot.so
-vendor/lib/libarcsoft_beautyshot.so
-vendor/lib/libarcsoft_beautyshot_image_algorithm.so
-vendor/lib/libarcsoft_beautyshot_video_algorithm.so
 vendor/lib/libchromaflash.so
 vendor/lib/libflash_pmic.so
 vendor/lib/libjpegdhw.so
@@ -283,10 +268,6 @@ vendor/lib/libmmcamera_ubifocus_lib.so
 vendor/lib/libmmjpeg.so
 vendor/lib/libmmqjpeg_codec.so
 vendor/lib/libmmqjpegdma.so
-vendor/lib/libmorpho_easy_hdr.so
-vendor/lib/libmorpho_hdr_checker.so
-vendor/lib/libmorpho_image_stab4.so
-vendor/lib/libmorpho_panorama_gp.so
 vendor/lib/libmpbase.so
 vendor/lib/libois_lc898122.so
 vendor/lib/liboptizoom.so
@@ -296,8 +277,8 @@ vendor/lib/libqomx_jpegenc_pipe.so
 vendor/lib/libremosaic_daemon.so
 vendor/lib/libseemore.so
 vendor/lib/libtrueportrait.so
-vendor/lib/libts_detected_face_hal.so
-vendor/lib/libts_face_beautify_hal.so
+-vendor/lib/libts_detected_face_hal.so
+-vendor/lib/libts_face_beautify_hal.so
 vendor/lib/libubifocus.so
 vendor/lib64/libmmcamera2_frame_algorithm.so
 vendor/lib64/libmmcamera2_is.so
