@@ -79,6 +79,9 @@ ro.opengles.version=196610
 ro.qualcomm.cabl=0
 ro.sf.lcd_density=480
 
+# DRM
+drm.service.enabled=true
+
 #Enable B service adj transition by default
 ro.sys.fw.bservice_enable=true
 ro.sys.fw.bservice_limit=5
