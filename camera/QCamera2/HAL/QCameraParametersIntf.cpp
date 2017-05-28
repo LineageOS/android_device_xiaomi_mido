@@ -1,4 +1,4 @@
-/* Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -1453,6 +1453,13 @@ int32_t QCameraParametersIntf::updateDtVc(int32_t *dt, int32_t *vc)
     Mutex::Autolock lock(mLock);
     CHECK_PARAM_INTF(mImpl);
     return mImpl->updateDtVc(dt, vc);
+}
+
+bool QCameraParametersIntf::isLinkPreviewForLiveShot()
+{
+    Mutex::Autolock lock(mLock);
+    CHECK_PARAM_INTF(mImpl);
+    return mImpl->isLinkPreviewForLiveShot();
 }
 
 }; // namespace qcamera
