@@ -632,12 +632,16 @@ int32_t QCameraStateMachine::procEvtPreviewStoppedState(qcamera_sm_evt_enum_t ev
             m_parent->signalAPIResult(&result);
         }
         break;
+    case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
+        {
+            LOGW("Free video handle %d %d", evt, m_state);
+            QCameraVideoMemory::closeNativeHandle((const void *)payload);
+        }
     case QCAMERA_SM_EVT_PRE_START_RECORDING:
     case QCAMERA_SM_EVT_RESTART_STOP_PREVIEW:
     case QCAMERA_SM_EVT_RESTART_START_PREVIEW:
     case QCAMERA_SM_EVT_START_RECORDING:
     case QCAMERA_SM_EVT_STOP_RECORDING:
-    case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
     case QCAMERA_SM_EVT_PREPARE_SNAPSHOT:
     case QCAMERA_SM_EVT_PRE_TAKE_PICTURE:
     case QCAMERA_SM_EVT_TAKE_PICTURE:
@@ -1048,6 +1052,11 @@ int32_t QCameraStateMachine::procEvtPreviewReadyState(qcamera_sm_evt_enum_t evt,
             m_parent->signalAPIResult(&result);
         }
         break;
+    case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
+        {
+            LOGW("Free video handle %d %d", evt, m_state);
+            QCameraVideoMemory::closeNativeHandle((const void *)payload);
+        }
     case QCAMERA_SM_EVT_PRE_START_RECORDING:
     case QCAMERA_SM_EVT_RESTART_STOP_PREVIEW:
     case QCAMERA_SM_EVT_RESTART_START_PREVIEW:
@@ -1057,7 +1066,6 @@ int32_t QCameraStateMachine::procEvtPreviewReadyState(qcamera_sm_evt_enum_t evt,
     case QCAMERA_SM_EVT_PRE_TAKE_PICTURE:
     case QCAMERA_SM_EVT_TAKE_PICTURE:
     case QCAMERA_SM_EVT_CANCEL_PICTURE:
-    case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
     case QCAMERA_SM_EVT_RELEASE:
         {
             LOGE("Error!! cannot handle evt(%d) in state(%d)", evt, m_state);
@@ -1580,9 +1588,13 @@ int32_t QCameraStateMachine::procEvtPreviewingState(qcamera_sm_evt_enum_t evt,
             m_parent->signalAPIResult(&result);
         }
         break;
+    case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
+        {
+            LOGW("Free video handle %d %d", evt, m_state);
+            QCameraVideoMemory::closeNativeHandle((const void *)payload);
+        }
     case QCAMERA_SM_EVT_CANCEL_PICTURE:
     case QCAMERA_SM_EVT_STOP_RECORDING:
-    case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
     case QCAMERA_SM_EVT_RELEASE:
         {
             LOGE("Error!! cannot handle evt(%d) in state(%d)", evt, m_state);

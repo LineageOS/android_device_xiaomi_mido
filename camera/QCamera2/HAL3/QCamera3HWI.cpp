@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2017, The Linux Foundation. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are
@@ -5444,6 +5444,11 @@ QCamera3HardwareInterface::translateFromHalMetadata(
                 MAX_METADATA_PRIVATE_PAYLOAD_SIZE_IN_BYTES / sizeof(int32_t));
     }
 
+    IF_META_AVAILABLE(int32_t, meteringMode, CAM_INTF_PARM_AEC_ALGO_TYPE, metadata) {
+        camMetadata.update(QCAMERA3_EXPOSURE_METER,
+                meteringMode, 1);
+    }
+
     if (metadata->is_tuning_params_valid) {
         uint8_t tuning_meta_data_blob[sizeof(tuning_params_t)];
         uint8_t *data = (uint8_t *)&tuning_meta_data_blob[0];
@@ -7313,6 +7318,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     if (flashAvailable) {
         avail_ae_modes.add(ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH);
         avail_ae_modes.add(ANDROID_CONTROL_AE_MODE_ON_ALWAYS_FLASH);
+        avail_ae_modes.add(ANDROID_CONTROL_AE_MODE_ON_AUTO_FLASH_REDEYE);
     }
     staticInfo.update(ANDROID_CONTROL_AE_AVAILABLE_MODES,
                       avail_ae_modes.array(),
@@ -7818,6 +7824,11 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     else
         LOGW("Warning: ANDROID_SENSOR_OPAQUE_RAW_SIZE is using rough estimation(2 bytes/pixel)");
 #endif
+
+    int32_t sharpness_range[] = {
+            gCamCapability[cameraId]->sharpness_ctrl.min_value,
+            gCamCapability[cameraId]->sharpness_ctrl.max_value};
+    staticInfo.update(QCAMERA3_SHARPNESS_RANGE, sharpness_range, 2);
 
     gStaticMetadata[cameraId] = staticInfo.release();
     return rc;
@@ -9260,10 +9271,21 @@ int QCamera3HardwareInterface::translateToHalMetadata
     if (frame_settings.exists(ANDROID_EDGE_MODE)) {
         cam_edge_application_t edge_application;
         edge_application.edge_mode = frame_settings.find(ANDROID_EDGE_MODE).data.u8[0];
+
         if (edge_application.edge_mode == CAM_EDGE_MODE_OFF) {
             edge_application.sharpness = 0;
         } else {
-            edge_application.sharpness = gCamCapability[mCameraId]->sharpness_ctrl.def_value; //default
+            edge_application.sharpness =
+                    gCamCapability[mCameraId]->sharpness_ctrl.def_value; //default
+            if (frame_settings.exists(QCAMERA3_SHARPNESS_STRENGTH)) {
+                int32_t sharpness =
+                        frame_settings.find(QCAMERA3_SHARPNESS_STRENGTH).data.i32[0];
+                if (sharpness >= gCamCapability[mCameraId]->sharpness_ctrl.min_value &&
+                    sharpness <= gCamCapability[mCameraId]->sharpness_ctrl.max_value) {
+                    LOGD("Setting edge mode sharpness %d", sharpness);
+                    edge_application.sharpness = sharpness;
+                }
+            }
         }
         if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_META_EDGE_MODE, edge_application)) {
             rc = BAD_VALUE;
@@ -9649,6 +9671,15 @@ int QCamera3HardwareInterface::translateToHalMetadata
         }
     }
 
+    if (frame_settings.exists(QCAMERA3_EXPOSURE_METER)) {
+        int32_t* exposure_metering_mode =
+                frame_settings.find(QCAMERA3_EXPOSURE_METER).data.i32;
+        if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_PARM_AEC_ALGO_TYPE,
+                *exposure_metering_mode)) {
+            rc = BAD_VALUE;
+        }
+    }
+
     if (frame_settings.exists(ANDROID_SENSOR_TEST_PATTERN_MODE)) {
         int32_t fwk_testPatternMode =
                 frame_settings.find(ANDROID_SENSOR_TEST_PATTERN_MODE).data.i32[0];
@@ -9775,6 +9806,49 @@ int QCamera3HardwareInterface::translateToHalMetadata
         ADD_SET_PARAM_ARRAY_TO_BATCH(hal_metadata, CAM_INTF_META_PRIVATE_DATA,
                 privatedata.data.i32, privatedata.count, count);
         if (privatedata.count != count) {
+            rc = BAD_VALUE;
+        }
+    }
+
+    // ISO/Exposure Priority
+    if (frame_settings.exists(QCAMERA3_USE_ISO_EXP_PRIORITY) &&
+        frame_settings.exists(QCAMERA3_SELECT_PRIORITY)) {
+        cam_priority_mode_t mode =
+                (cam_priority_mode_t)frame_settings.find(QCAMERA3_SELECT_PRIORITY).data.i32[0];
+        if((CAM_ISO_PRIORITY == mode) || (CAM_EXP_PRIORITY == mode)) {
+            cam_intf_parm_manual_3a_t use_iso_exp_pty;
+            use_iso_exp_pty.previewOnly = FALSE;
+            uint64_t* ptr = (uint64_t*)frame_settings.find(QCAMERA3_USE_ISO_EXP_PRIORITY).data.i64;
+            use_iso_exp_pty.value = *ptr;
+
+            if(CAM_ISO_PRIORITY == mode) {
+                if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_PARM_ISO,
+                        use_iso_exp_pty)) {
+                    rc = BAD_VALUE;
+                }
+            }
+            else {
+                if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_PARM_EXPOSURE_TIME,
+                        use_iso_exp_pty)) {
+                    rc = BAD_VALUE;
+                }
+            }
+
+            if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_PARM_ZSL_MODE, 1)) {
+                    rc = BAD_VALUE;
+            }
+        }
+    } else {
+        if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_PARM_ZSL_MODE, 0)) {
+            rc = BAD_VALUE;
+        }
+    }
+
+    // Saturation
+    if (frame_settings.exists(QCAMERA3_USE_SATURATION)) {
+        int32_t* use_saturation =
+                frame_settings.find(QCAMERA3_USE_SATURATION).data.i32;
+        if (ADD_SET_PARAM_ENTRY_TO_BATCH(hal_metadata, CAM_INTF_PARM_SATURATION, *use_saturation)) {
             rc = BAD_VALUE;
         }
     }
@@ -10801,8 +10875,10 @@ bool QCamera3HardwareInterface::isOnEncoder(
         const cam_dimension_t max_viewfinder_size,
         uint32_t width, uint32_t height)
 {
-    return (width > (uint32_t)max_viewfinder_size.width ||
-            height > (uint32_t)max_viewfinder_size.height);
+    return ((width > (uint32_t)max_viewfinder_size.width) ||
+            (height > (uint32_t)max_viewfinder_size.height) ||
+            (width > (uint32_t)VIDEO_4K_WIDTH) ||
+            (height > (uint32_t)VIDEO_4K_HEIGHT));
 }
 
 /*===========================================================================
@@ -10925,22 +11001,13 @@ void QCamera3HardwareInterface::setPAAFSupport(
             feature_mask, stream_type, filter_arrangement);
 
     switch (filter_arrangement) {
-    case CAM_FILTER_ARRANGEMENT_RGGB:
-    case CAM_FILTER_ARRANGEMENT_GRBG:
-    case CAM_FILTER_ARRANGEMENT_GBRG:
-    case CAM_FILTER_ARRANGEMENT_BGGR:
-        if ((stream_type == CAM_STREAM_TYPE_PREVIEW) ||
-                (stream_type == CAM_STREAM_TYPE_ANALYSIS) ||
-                (stream_type == CAM_STREAM_TYPE_VIDEO)) {
-            feature_mask |= CAM_QCOM_FEATURE_PAAF;
-        }
-        break;
     case CAM_FILTER_ARRANGEMENT_Y:
         if (stream_type == CAM_STREAM_TYPE_ANALYSIS) {
             feature_mask |= CAM_QCOM_FEATURE_PAAF;
         }
         break;
     default:
+        LOGD("PAAF not supported for format %d",filter_arrangement);
         break;
     }
 }
