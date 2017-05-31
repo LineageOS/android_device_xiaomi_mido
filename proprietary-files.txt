@@ -28,9 +28,7 @@ etc/drc/drc_cfg_5.1.txt
 etc/drc/drc_cfg_AZ.txt
 etc/surround_sound_3mic/surround_sound_rec_5.1.cfg
 etc/surround_sound_3mic/surround_sound_rec_AZ.cfg
-lib/hw/audio.primary.msm8953.so
 lib/soundfx/libdirac.so
-lib64/hw/audio.primary.msm8953.so
 vendor/etc/diracmobile.config
 vendor/lib/libacdb-fts.so
 vendor/lib/libacdbloader.so
