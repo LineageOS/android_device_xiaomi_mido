@@ -1,7 +1,7 @@
 # Fpc Fingerprint
 /data/fpc(/.*)?					u:object_r:fpc_data_file:s0
 /dev/socket/fpce(/.*)?				u:object_r:fpce_socket:s0
-/sys/devices/soc/soc:fpc_fpc1020/irq		u:object_r:sysfs_fpc_irq:s0
+/sys/devices/soc/soc:fpc1020(/.*)?		u:object_r:fpc_sysfs:s0
 
 # Ir
 /dev/lirc[0-9]*					u:object_r:lirc_device:s0
@@ -15,9 +15,14 @@
 /system/bin/gx_fpd				u:object_r:gx_fpd_exec:s0
 
 # Fp Libs
-/system/lib64/libfpnav.so			u:object_r:system_file:s0
-/system/lib64/libfpservice.so			u:object_r:system_file:s0
+/system/lib64/libfpnav\.so			u:object_r:system_file:s0
+/system/lib64/libfpservice\.so			u:object_r:system_file:s0
 
 # Glove Mode
 /sys/class/tp_glove/tp_glove/glove_enable	u:object_r:proc_touchpanel:s0
 
+# Block devices
+/dev/block/bootdevice/by-name/persist		u:object_r:persist_block_device:s0
+
+# Data files
+/data/misc/netmgr/log\.txt			u:object_r:netmgrd_data_file:s0

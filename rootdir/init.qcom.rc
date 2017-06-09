@@ -120,6 +120,7 @@ on boot
     mkdir /persist/misc 0770 system system
     mkdir /persist/alarm 0770 system system
     mkdir /persist/time 0770 system system
+    restorecon_recursive /persist
 
     #Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
