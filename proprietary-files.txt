@@ -1060,10 +1060,7 @@ vendor/lib/libperipheral_client.so
 vendor/lib64/libperipheral_client.so
 
 # Postprocessing
-bin/displayfeature
 framework/com.qti.snapdragon.sdk.display.jar
-lib/libdisplayfeatureservice.so
-lib64/libdisplayfeatureservice.so
 vendor/bin/mm-pp-dpps
 vendor/lib/libdisp-aba.so
 vendor/lib64/libdisp-aba.so

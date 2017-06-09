@@ -18,9 +18,6 @@
 /system/lib64/libfpnav.so			u:object_r:system_file:s0
 /system/lib64/libfpservice.so			u:object_r:system_file:s0
 
-# Display Feature
-/system/bin/displayfeature			u:object_r:displayfeature_exec:s0
-
 # Glove Mode
 /sys/class/tp_glove/tp_glove/glove_enable	u:object_r:proc_touchpanel:s0
 
