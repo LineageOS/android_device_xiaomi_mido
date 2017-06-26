@@ -26,9 +26,7 @@
 #
 
 import init.qcom.usb.rc
-import init.msm.usb.configfs.rc
 import init.target.rc
-import init.qcom.factory.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
