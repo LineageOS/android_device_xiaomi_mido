@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da87b5cf_14f913e9",
+        "filename": "rootdir/fstab.qcom",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 10067
+      },
+      "writtenOn": "2017-06-26T09:35:18Z",
+      "side": 1,
+      "message": "auto",
+      "range": {
+        "startLine": 20,
+        "startChar": 38,
+        "endLine": 20,
+        "endChar": 54
+      },
+      "revId": "65091803979a08887181bb4e387cd6a97f575bb7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da87b5cf_b4ddc772",
+        "filename": "rootdir/fstab.qcom",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 10067
+      },
+      "writtenOn": "2017-06-26T09:35:18Z",
+      "side": 1,
+      "message": "auto",
+      "range": {
+        "startLine": 21,
+        "startChar": 61,
+        "endLine": 21,
+        "endChar": 76
+      },
+      "revId": "65091803979a08887181bb4e387cd6a97f575bb7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
