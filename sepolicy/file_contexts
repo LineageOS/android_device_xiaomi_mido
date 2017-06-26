@@ -14,10 +14,6 @@
 /dev/gf66xx-spi					u:object_r:gx_fpd_device:s0
 /system/bin/gx_fpd				u:object_r:gx_fpd_exec:s0
 
-# Fp Libs
-/system/lib64/libfpnav\.so			u:object_r:system_file:s0
-/system/lib64/libfpservice\.so			u:object_r:system_file:s0
-
 # Glove Mode
 /sys/class/tp_glove/tp_glove/glove_enable	u:object_r:proc_touchpanel:s0
 
