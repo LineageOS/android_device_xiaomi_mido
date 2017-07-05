@@ -66,7 +66,8 @@
         <device name="SND_DEVICE_IN_VOICE_FLUENCE_DMIC_AANC" acdb_id="12"/>
         <device name="SND_DEVICE_OUT_SPEAKER_REVERSE" acdb_id="135"/>
         <device name="SND_DEVICE_OUT_SPEAKER_WSA" acdb_id="14"/>	
-
+	<device name="SND_DEVICE_IN_HANDSET_MIC" acdb_id="1"/>
+        <device name="SND_DEVICE_IN_HANDSET_STEREO_DMIC" acdb_id="1"/>
     </acdb_ids>
 </audio_platform_info>
 
