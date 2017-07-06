@@ -19,6 +19,7 @@ LOCAL_INC_FILES := qomx_core.h \
 LOCAL_SRC_FILES := qomx_core.c
 
 LOCAL_MODULE           := libqomx_core
+LOCAL_VENDOR_MODULE := true
 LOCAL_PRELINK_MODULE   := false
 LOCAL_SHARED_LIBRARIES := libcutils libdl liblog
 
