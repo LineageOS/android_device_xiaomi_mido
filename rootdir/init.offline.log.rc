@@ -1,0 +1,13 @@
+on post-fs-data
+	mkdir /data/local/log 0771 system system
+
+service kernellog /system/bin/sh /system/bin/kernellog.sh
+	class main
+	disabled
+	oneshot
+
+on property:persist.sys.offlinelog.kernel=true
+	start kernellog
+
+on property:persist.sys.offlinelog.kernel=false
+	stop kernellog

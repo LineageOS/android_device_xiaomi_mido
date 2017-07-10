@@ -14,16 +14,34 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/xiaomi/mido/full_mido.mk)
+PRODUCT_RELEASE_NAME := oxygen
 
 # Inherit some common LineageOS stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
-PRODUCT_NAME := lineage_mido
+$(call inherit-product, device/xiaomi/oxygen/full_oxygen.mk)
+
+PRODUCT_NAME := lineage_oxygen
 BOARD_VENDOR := Xiaomi
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.timezone=Asia/Shanghai \
+
+PRODUCT_DEFAULT_LOCALE := zh_CN
+
+# Boot animation
+TARGET_SCREEN_WIDTH := 1080
+TARGET_SCREEN_HEIGHT := 1920
+
+# CMHW
+BOARD_USES_CYANOGEN_HARDWARE := true
+BOARD_HARDWARE_CLASS += \
+    hardware/cyanogen/cmhw
+
+#    device/xiaomi/oxygen/cmhw
+
+PRODUCT_PACKAGES += Prevent
+WITH_SU := true
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
-PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT="xiaomi/mido/mido:6.0.1/MMB29M/V8.2.4.0.MCFMIDL:user/release-keys" \
-    PRIVATE_BUILD_DESC="mido-user 6.0.1 MMB29M V8.2.4.0.MCFMIDL release-keys"

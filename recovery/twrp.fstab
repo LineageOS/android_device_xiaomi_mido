@@ -1,0 +1,38 @@
+# Android fstab file.
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+/recovery       emmc      /dev/block/bootdevice/by-name/recovery             flags=backup=1
+/boot           emmc      /dev/block/bootdevice/by-name/boot
+
+/efs1           emmc      /dev/block/bootdevice/by-name/modemst1             flags=display="EFS";backup=1
+/efs2           emmc      /dev/block/bootdevice/by-name/modemst2             flags=backup=1
+/firmware       vfat      /dev/block/bootdevice/by-name/modem                flags=display="Firmware";backup=1;mounttodecrypt
+/cache          ext4      /dev/block/bootdevice/by-name/cache                flags=formattable
+
+/system         ext4      /dev/block/bootdevice/by-name/system
+/system_image   emmc      /dev/block/bootdevice/by-name/system
+/data           ext4      /dev/block/bootdevice/by-name/userdata             flags=length=-16384
+/cust           ext4      /dev/block/bootdevice/by-name/cust                 flags=display="Cust";backup=1
+/misc           emmc      /dev/block/bootdevice/by-name/misc                 flags=display="Misc"
+/persist        ext4      /dev/block/bootdevice/by-name/persist              flags=display="Persist";backup=1
+
+/sdcard1        auto      /dev/block/mmcblk1p1                               flags=display="MicroSD";storage;wipeingui;removable
+/usb-otg        auto      /dev/block/sda1                                    flags=display="USB Storage";storage;wipeingui;removable
+
+# Bootloader
+
+/cmnlib		emmc	  /dev/block/bootdevice/by-name/cmnlib	             flags=backup=1
+/tz		emmc	  /dev/block/bootdevice/by-name/tz	             flags=backup=1
+/rpm		emmc	  /dev/block/bootdevice/by-name/rpm	             flags=backup=1
+/keymaster	emmc	  /dev/block/bootdevice/by-name/keymaster	     flags=backup=1
+/devcfg		emmc	  /dev/block/bootdevice/by-name/devcfg	             flags=backup=1
+
+# Modem backup/restore
+/dsp		emmc	  /dev/block/bootdevice/by-name/dsp	             flags=backup=1
+
+# EFS backup/restore
+/efs1		emmc	  /dev/block/bootdevice/by-name/modemst1	     flags=backup=1;display="EFS"
+/efs2		emmc	  /dev/block/bootdevice/by-name/modemst2	     flags=backup=1
+/efsg		emmc	  /dev/block/bootdevice/by-name/fsg	             flags=backup=1
+/efsc		emmc	  /dev/block/bootdevice/by-name/fsc	             flags=backup=1

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/xiaomi/mido
+LOCAL_PATH := device/xiaomi/oxygen
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
@@ -39,12 +39,15 @@ TARGET_USES_64_BIT_BINDER := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78af000
+BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78af000
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
 TARGET_KERNEL_CONFIG := mido_defconfig
 TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8953
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/$(BOARD_KERNEL_IMAGE_NAME)
 
 # ANT
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
@@ -108,18 +111,12 @@ TARGET_TS_MAKEUP := true
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 
-# CMHW
-BOARD_USES_CYANOGEN_HARDWARE := true
-BOARD_HARDWARE_CLASS += \
-    hardware/cyanogen/cmhw \
-    device/xiaomi/mido/cmhw
-TARGET_TAP_TO_WAKE_NODE := "/proc/touchpanel/enable_dt2w"
-
 # CNE / DPM
 BOARD_USES_QCNE := true
 
 # Crypto
 TARGET_HW_DISK_ENCRYPTION := true
+TARGET_SWV8_DISK_ENCRYPTION := true
 
 # Dexpreopt
 ifeq ($(HOST_OS),linux)
@@ -144,7 +141,7 @@ USE_OPENGL_RENDERER := true
 # Filesystem
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
+#TARGET_USERIMAGES_USE_F2FS := true
 
 #FM
 BOARD_HAVE_QCOM_FM := true
@@ -155,12 +152,12 @@ USE_DEVICE_SPECIFIC_GPS := true
 TARGET_NO_RPC := true
 
 # Filesystem
-TARGET_ANDROID_FILESYSTEM_CONFIG_H := $(LOCAL_PATH)/android_filesystem_config.h
+TARGET_ANDROID_FILESYSTEM_CONFIG_H := $(LOCAL_PATH)/include/android_filesystem_config.h
 
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_mido
+TARGET_INIT_VENDOR_LIB := libinit_oxygen
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
-TARGET_RECOVERY_DEVICE_MODULES := libinit_mido
+TARGET_RECOVERY_DEVICE_MODULES := libinit_oxygen
 
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
@@ -171,10 +168,10 @@ TARGET_USES_MEDIA_EXTENSIONS := true
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4294967296
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 25765043200 # 25765059584 - 16384
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
-BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
+BOARD_PERSISTIMAGE_PARTITION_SIZE := 67108864
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
 
 # Peripheral manager
@@ -197,6 +194,39 @@ TARGET_RIL_VARIANT := caf
 # Recovery
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.qcom
 
+# TWRP Configuration
+DEVICE_RESOLUTION := 1080x1920
+TW_EXTRA_LANGUAGES := true
+TW_DEFAULT_LANGUAGE := zh_CN
+TW_INCLUDE_CRYPTO := true
+#TWRP_INCLUDE_LOGCAT := true
+#TARGET_USES_LOGD := true
+TW_EXCLUDE_SUPERSU := true
+TW_MAX_BRIGHTNESS := 4095
+TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
+TARGET_RECOVERY_QCOM_RTC_FIX := true
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
+RECOVERY_SDCARD_ON_DATA := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+TARGET_CRYPTFS_HW_PATH := vendor/qcom/opensource/cryptfs_hw
+
+KEYSTORE_LIBS := \
+    hw/keystore.msm8953.so \
+    libQSEEComAPI.so \
+    libdiag.so \
+    libdrmfs.so \
+    librpmb.so \
+    libssd.so \
+
+TW_RECOVERY_ADDITIONAL_RELINK_FILES := \
+    $(CURDIR)/out/target/product/oxygen/system/bin/qseecomd \
+    $(addprefix $(CURDIR)/out/target/product/oxygen/system/vendor/lib64/,$(KEYSTORE_LIBS)) \
+
+TARGET_RECOVERY_DEVICE_MODULES += \
+    init.recovery.qcom.rc \
+    recovery_vendor_symlinks \
+    twrp.fstab \
+
 # Sensor
 USE_SENSOR_MULTI_HAL := true
 
@@ -217,4 +247,4 @@ WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # Inherit from the proprietary version
--include vendor/xiaomi/mido/BoardConfigVendor.mk
+-include vendor/xiaomi/oxygen/BoardConfigVendor.mk

@@ -34,7 +34,7 @@
 /dev/kgsl-2d0             0666   root       root
 /dev/kgsl-2d1             0666   root       root
 /dev/ion                  0664   system     system
-/dev/rtc0                 0660   system     system
+/dev/rtc0                 0640   system     system
 /dev/smd0                 0660   system     system
 /dev/smd4                 0660   system     system
 /dev/smd_cxm_qmi          0640   radio      radio
@@ -267,6 +267,9 @@
 /dev/block/platform/soc/7824900.sdhci/by-name/config    0600   system     system
 /dev/block/platform/soc/7464900.sdhci/by-name/frp       0600   system     system
 /dev/block/platform/soc/624000.ufshc/by-name/frp        0600   system     system
+/dev/block/platform/soc/1da4000.ufshc/by-name/frp       0600   system     system
 
-# lirc
+# peel ir nodes
+/dev/peel_ir                 0660   system       system
+#spi ir nodes
 /dev/lirc0                0660   system     system

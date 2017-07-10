@@ -1,4 +1,4 @@
-# Device Tree for Xiaomi Redmi Note 4 & 4x (Mido)
+# Device Tree for Xiaomi MAX 2 (Oxygen)
 
 ## Spec Sheet
 
@@ -7,17 +7,17 @@
 | CPU                     | Octa-core 2.0 GHz Cortex-A53      |
 | Chipset                 | Qualcomm MSM8953 Snapdragon 625   |
 | GPU                     | Adreno 506                        |
-| Memory                  | 2/3/4 GB                          |
-| Shipped Android Version | 6.0.1                             |
-| Storage                 | 32/64 GB                          |
+| Memory                  | 4 GB                              |
+| Shipped Android Version | 7.1.1                             |
+| Storage                 | 64/128 GB                         |
 | MicroSD                 | Up to 256 GB                      |
-| Battery                 | 4100 mAh (non-removable)          |
-| Dimensions              | 151 x 76 x 8.5 mm                 |
-| Display                 | 1920x1080 pixels, 5.5 (~401 PPI)  |
-| Rear Camera             | 13 MP, LED flash                  |
+| Battery                 | 5300 mAh (non-removable)          |
+| Dimensions              | 88.7 x 174.1 x 7.6 mm             |
+| Display                 | 1920x1080 pixels, 6.44 (~342 PPI) |
+| Rear Camera             | 13 MP, Dual LED flash             |
 | Front Camera            | 5 MP                              |
-| Release Date            | January 2017                      |
+| Release Date            | May 2017                          |
 
-## Device Picture
+## Device picture
+![MI Max 2](http://2e.zol-img.com.cn/product/183/36/ceSEFCf5fGGwg.jpg "Xiaomi MAX 2")
 
-![Redmi Note 4](http://i01.appmifile.com/webfile/globalimg/7/537557F3-A4F1-2490-E9D3-138B2A11DBF6.png "Redmi Note 4")

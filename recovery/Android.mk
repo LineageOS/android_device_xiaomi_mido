@@ -1,0 +1,31 @@
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE       := twrp.fstab
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_SRC_FILES    := $(LOCAL_MODULE)
+LOCAL_MODULE_PATH  := $(TARGET_RECOVERY_ROOT_OUT)/etc
+include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE       := init.recovery.qcom.rc
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_SRC_FILES    := $(LOCAL_MODULE)
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
+include $(BUILD_PREBUILT)
+
+RECOVERY_VENDOR_SYMLINKS := $(TARGET_RECOVERY_ROOT_OUT)/sbin/hw $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64
+
+$(RECOVERY_VENDOR_SYMLINKS): $(LOCAL_PATH)/Android.mk
+	@echo "Symlink: $@ -> /sbin/"
+	@rm -rf $@
+	@mkdir -p "$(dir $@)"
+	$(hide) ln -sf /sbin $@
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := recovery_vendor_symlinks
+LOCAL_MODULE_TAGS := optional
+LOCAL_ADDITIONAL_DEPENDENCIES := $(RECOVERY_VENDOR_SYMLINKS)
+include $(BUILD_PHONY_PACKAGE)

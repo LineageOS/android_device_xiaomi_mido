@@ -27,20 +27,57 @@
 #
 #
 
+import init.carrier.rc
+import init.offline.log.rc
+
 on early-init
     mkdir /firmware 0771 system system
     mkdir /system 0777 root root
     symlink /data/tombstones /tombstones
     mkdir /dsp 0771 media media
+    mkdir /persist 0771 root system
+
+on init
+    mkdir /cust 0771 system system
 
 on fs
     wait /dev/block/bootdevice
 
     mount_all fstab.qcom
+    write /proc/sys/vm/swappiness 100
+
+    # Keeping following partitions outside fstab file. As user may not have
+    # these partition flashed on the device. Failure to mount any partition in fstab file
+    # results in failure to launch late-start class.
+
+    wait /dev/block/bootdevice/by-name/cache
+    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev barrier=1
+
+    mkdir /persist/data 0700 system system
+    mkdir /persist/bms 0700 root system
+    mkdir /persist/audio 0777 media audio
+    restorecon_recursive /persist
+
+    wait /dev/block/bootdevice/by-name/dsp
+    mount ext4 /dev/block/bootdevice/by-name/dsp /dsp ro nosuid nodev barrier=1
+
+    wait /dev/block/bootdevice/by-name/modem
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+    #write /sys/kernel/boot_adsp/boot 1
 
     wait /dev/block/bootdevice/by-name/oem
     mount ext4 /dev/block/bootdevice/by-name/oem /oem ro nosuid nodev barrier=1
-    
+
+on post-fs
+    # We chown/chmod /cust again so because mount is run as root + defaults
+    chown system system /cust
+    chmod 0771 /cust
+    # We restorecon /cust in case the cust partition has been reset.
+    restorecon_recursive /cust
+
+    # create the lost+found directories, so as to enforce our permissions
+    mkdir /cust/lost+found 0770 root root
+
 on post-fs-data
     mkdir /data/tombstones 0771 system system
     mkdir /tombstones/modem 0771 system system
@@ -51,6 +88,12 @@ on post-fs-data
     mkdir /persist/data/tz 0700 system system
     mkdir /data/misc/dts 0770 media audio
     mkdir /data/misc/hbtp 0750 system system
+    mkdir /data/nfc 0770 nfc nfc
+    mkdir /data/fpc 0770 system system
+    mkdir /data/fpc/s 0771 system system
+    mkdir /data/thermal 0771 system system
+    mkdir /data/misc/goodix 0770 system system
+    mkdir /data/gf_data 0770 system system
 
 #start camera server as daemon
 service qcamerasvr /system/bin/mm-qcamera-daemon
@@ -60,6 +103,9 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
 
 on init
    write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
+   chown system system /dev/goodix_fp
+   # set gpio13 could be read by all
+   chmod 0644 /dev/gpio_rf
 
 service qfp-daemon /system/bin/qfp-daemon
    class late_start
@@ -93,6 +139,11 @@ service qseecomd /system/bin/qseecomd
    user root
    group root
 
+#service aostlmd /system/bin/aostlmd
+#   class late_start
+#   user system
+#   group system
+
 service perfd /system/vendor/bin/perfd
    class main
    user root
@@ -105,7 +156,7 @@ service gamed /system/vendor/bin/gamed
    disabled
    socket gamed seqpacket 0640 system system
 
-service thermal-engine /system/vendor/bin/thermal-engine
+service thermal-engine /system/vendor/bin/thermal-engine -T
    class main
    user root
    socket thermal-send-client stream 0666 system system
@@ -114,7 +165,7 @@ service thermal-engine /system/vendor/bin/thermal-engine
    group root
 
 service time_daemon /system/bin/time_daemon
-   class main
+   class late_start
    user root
    group root
 
@@ -125,7 +176,36 @@ service audiod /system/bin/audiod
 
 on boot
     start rmt_storage
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-2,4-7
+    write /dev/cpuset/foreground/boost/cpus 4-7
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
+
     insmod /system/lib/modules/adsprpc.ko
+# access permission for secure touch
+    chmod 0660 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
+    chmod 0440 /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
+    chmod 0660 /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
+    chmod 0440 /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
+    chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
+    chown system drmrpc /sys/devices/soc.0/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
+    chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch_enable
+    chown system drmrpc /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/secure_touch
+    chmod 0660 /dev/pn553
+    chmod 0666 /dev/tas_calib
+    chown nfc nfc /dev/pn553
+
+   chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/irq
+   chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/wakeup_enable
+   chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/hw_reset
+   chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/device_prepare
+   chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/vendor
+   chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/irq
+   chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/wakeup_enable
+   chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/hw_reset
+   chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/device_prepare
+   chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/vendor
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -137,13 +217,13 @@ service imsqmidaemon /system/bin/imsqmidaemon
     class main
     user system
     socket ims_qmid stream 0660 system radio
-    group radio log diag
+    group radio net_raw log diag
 
 service imsdatadaemon /system/bin/imsdatadaemon
     class main
     user system
     socket ims_datad stream 0660 system radio
-    group system wifi radio inet log diag
+    group system wifi radio inet net_raw log diag net_admin
     disabled
 
 on property:sys.ims.QMI_DAEMON_STATUS=1
@@ -153,7 +233,7 @@ service ims_rtp_daemon /system/bin/ims_rtp_daemon
    class main
    user system
    socket ims_rtpd stream 0660 system radio
-   group radio diag diag inet log
+   group radio net_raw diag diag inet log
    disabled
 
 service imscmservice /system/bin/imscmservice
@@ -197,14 +277,52 @@ on property:init.svc.zygote=running
 on property:init.svc.zygote=restarting
     stop ppd
 
+service qpaydaemon /system/vendor/bin/qpaydaemon
+    class late_start
+    user system
+    group system
+
+service displayfeature /system/bin/displayfeature
+    class late_start
+    user root
+    group root
+
+on property:init.svc.surfaceflinger=stopped
+    stop displayfeature
+
+on property:init.svc.surfaceflinger=running
+    start displayfeature
+
+on property:init.svc.surfaceflinger=restarting
+    stop displayfeature
+
+on property:init.svc.zygote=stopped
+    stop displayfeature
+
+on property:init.svc.zygote=running
+    start displayfeature
+
+on property:init.svc.zygote=restarting
+    stop displayfeature
+
 on charger
     wait /dev/block/bootdevice/by-name/system
     mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
-    load_all_props
-    setprop sys.usb.configfs 0
-    setprop persist.sys.usb.config mass_storage
-    start qcom-post-boot
-    setprop persist.sys.usb.config mass_storage
+    write /sys/module/lpm_levels/parameters/sleep_disabled 0
+    write /sys/module/lpm_levels/system/system-pc/idle_enabled 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "userspace"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed 652800
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "userspace"
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_setspeed 652800
+    write /sys/devices/system/cpu/cpu2/online 0
+    write /sys/devices/system/cpu/cpu3/online 0
+    write /sys/devices/system/cpu/cpu4/online 0
+    write /sys/devices/system/cpu/cpu5/online 0
+    write /sys/devices/system/cpu/cpu6/online 0
+    write /sys/devices/system/cpu/cpu7/online 0
+    write /sys/module/msm_thermal/parameters/enabled "N"
+    start qcom-sh
     start hvdcp_opti
 
 service dts_configurator /system/bin/dts_configurator
@@ -235,7 +353,7 @@ on property:init.svc.dts_configurator=stopped
 service per_mgr /system/bin/pm-service
     class core
     user system
-    group system
+    group system net_raw
 
 service per_proxy /system/bin/pm-proxy
     class core
@@ -249,161 +367,40 @@ on property:init.svc.per_mgr=running
 on property:sys.shutdown.requested=*
     stop per_proxy
 
+on property:persist.adb.tcp.port=*
+    stop adbd
+    start adbd
+
 service energy-awareness /system/bin/energy-awareness
     class main
     user root
     group system
     oneshot
 
-service getcolorid /system/bin/getcolorid
-    class core
-    oneshot
-
-# add for function test
-service chmodtpon /system/bin/chmodtp o 1
+service mdtpd /system/vendor/bin/mdtpd
+    class late_start
     user root
-    oneshot
+    group system radio drmrpc
+
+service mmbn-daemon /system/bin/mmbn-daemon
+    class main
     disabled
-
-on property:sys.chmodtp=1
-    start chmodtpon
-
-service chmodtpoff /system/bin/chmodtp f 1
-    user root
     oneshot
-    disabled
 
-on property:sys.chmodtp=2
-    start chmodtpoff
-
-service chmodtp3on /system/bin/chmodtp o 3
-    user root
+service goodixfp /system/bin/goodixfp
+    class late_start
+    user system
+    group system sdcard_rw
     oneshot
-    disabled
 
-on property:sys.chmodtp3=1
-    start chmodtp3on
-
-service chmodtp3off /system/bin/chmodtp f 3
-    user root
-    oneshot
-    disabled
-
-on property:sys.chmodtp3=2
-    start chmodtp3off
-
-service whiteflashon /system/bin/factory_bin w 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.whiteflashon=1
-    start whiteflashon
-
-service whiteflashoff /system/bin/factory_bin w 0
-    user root
-    oneshot
-    disabled
-
-on property:sys.whiteflashoff=1
-    start whiteflashoff
-
-service yellowflashon /system/bin/factory_bin y 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.yellowflashon=1
-    start yellowflashon
-
-service yellowflashoff /system/bin/factory_bin y 0
-    user root
-    oneshot
-    disabled
-
-on property:sys.yellowflashoff=1
-    start yellowflashoff
-
-service chargingenable /system/bin/factory_bin c 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.charging.enable=1
-    start chargingenable
-
-service chargingdisable /system/bin/factory_bin c 0
-    user root
-    oneshot
-    disabled
-
-on property:sys.charging.disable=1
-    start chargingdisable
-
-service keylighton /system/bin/factory_bin k 1
-    user root
-    oneshot
-    disabled
-on property:sys.keylighton=1
-    start keylighton
-
-service keylightoff /system/bin/factory_bin k 0
-    user root
-    oneshot
-    disabled
-on property:sys.keylightoff=1
-    start keylightoff
-
-service redledon /system/bin/factory_bin r 1
-    user root
-    oneshot
-    disabled
-on property:sys.redledon=1
-    start redledon
-
-service redledoff /system/bin/factory_bin r 0
-    user root
-    oneshot
-    disabled
-on property:sys.redledoff=1
-    start redledoff
-
-service greenledon /system/bin/factory_bin g 1
-    user root
-    oneshot
-    disabled
-on property:sys.greenledon=1
-    start greenledon
-
-service greenledoff /system/bin/factory_bin g 0
-    user root
-    oneshot
-    disabled
-on property:sys.greenledoff=1
-    start greenledoff
-
-service blueledon /system/bin/factory_bin b 1
-    user root
-    oneshot
-    disabled
-on property:sys.blueledon=1
-    start blueledon
-
-service blueledoff /system/bin/factory_bin b 0
-    user root
-    oneshot
-    disabled
-on property:sys.blueledoff=1
-    start blueledoff
-# add end
+service fingerprintd /system/bin/fingerprintd
+    class late_start
+    user system
+    group system sdcard_rw
 
 on boot
-	write /dev/cpuset/top-app/cpus 0-7
-	write /dev/cpuset/top-app/boost/cpus 4-7
-	write /dev/cpuset/foreground/cpus 0-6
-	write /dev/cpuset/foreground/boost/cpus 0-6
-	write /dev/cpuset/background/cpus 0-1
-	write /dev/cpuset/system-background/cpus 0-3
+    write /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/fw_name PR1702898-s3528t_00260005_00380008.img
+    write /sys/devices/soc.0/78b8000.i2c/i2c-4/4-0020/input/input0/update_fw 1
 
 service mtservice /system/bin/mtd
     class late_start
@@ -413,3 +410,19 @@ service vsimservice /system/bin/vsimd
 
 service mlipayservice /system/bin/mlipayd
     class late_start
+
+
+on property:adsp.restart=1
+    write /sys/kernel/debug/msm_subsys/adsp restart
+
+service smonsir /system/bin/smonsir
+    user root
+    group root
+    oneshot
+    disabled
+
+service smprosrv /system/bin/smprosrv
+    user root
+    group root
+    oneshot
+    disabled
