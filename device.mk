@@ -172,7 +172,7 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    lights.msm8953
+    lights.qcom
 
 # Media 
 PRODUCT_COPY_FILES += \
