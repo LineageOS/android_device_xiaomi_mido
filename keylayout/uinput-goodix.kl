@@ -1,5 +1,5 @@
 #
-# Goodix fingerprint sensor driver
+# FPC1020 Touch sensor driver
 #
 # Copyright (c) 2013,2014 Fingerprint Cards AB <tech@fingerprints.com>
 #
@@ -8,4 +8,8 @@
 # as published by the Free Software Foundation.
 #
 
-#key 353  CAMERA
+key  96    DPAD_CENTER  VIRTUAL
+key  102   HOME         VIRTUAL
+#key 105   DPAD_LEFT    VIRTUAL
+key  106   DPAD_RIGHT   VIRTUAL
+
