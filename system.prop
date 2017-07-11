@@ -43,6 +43,7 @@ bluetooth.hfp.client=1
 qcom.bluetooth.soc=smd
 
 # Camera
+persist.camera.HAL3.enabled=1
 persist.camera.isp.clock.optmz=0
 vidc.enc.dcvs.extra-buff-count=2
 media.camera.ts.monotonic=1
@@ -53,7 +54,7 @@ persist.camera.feature.cac=1
 persist.camera.imglib.cac3=2
 camera.lowpower.record.enable=1
 persist.camera.gyro.disable=0
-camera.hal1.packagelist=com.skype.raider,com.google.android.talk
+#camera.hal1.packagelist=com.skype.raider,com.google.android.talk
 
 # Cne/Dpm
 persist.cne.feature=1
