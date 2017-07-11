@@ -16,150 +16,14 @@
 -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-
-    <!-- Flag indicating whether the we should enable the automatic brightness in Settings.
-         Software implementation will be used if config_hardware_auto_brightness_available is not set -->
-    <bool name="config_automatic_brightness_available">true</bool>
-
-    <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
-         The N entries of this array define N + 1 control points as follows:
-         (1-based arrays)
-         Point 1:            (0, value[1]):             lux <= 0
-         Point 2:     (level[1], value[2]):  0        < lux <= level[1]
-         Point 3:     (level[2], value[3]):  level[2] < lux <= level[3]
-         ...
-         Point N+1: (level[N], value[N+1]):  level[N] < lux
-         The control points must be strictly increasing.  Each control point
-         corresponds to an entry in the brightness backlight values arrays.
-         For example, if LUX == level[1] (first element of the levels array)
-         then the brightness will be determined by value[2] (second element
-         of the brightness values array).
-         Spline interpolation is used to determine the auto-brightness
-         backlight values for LUX levels between these control points.
-         Must be overridden in platform specific overlays -->
-    <integer-array name="config_autoBrightnessLevels">
-        <item>10</item>
-        <item>30</item>
-        <item>60</item>
-        <item>100</item>
-        <item>150</item>
-        <item>210</item>
-        <item>255</item>
-    </integer-array>
-
-    <!-- Array of output values for LCD backlight corresponding to the LUX values
-         in the config_autoBrightnessLevels array.  This array should have size one greater
-         than the size of the config_autoBrightnessLevels array.
-         The brightness values must be between 0 and 255 and be non-decreasing.
-         This must be overridden in platform specific overlays -->
-    <integer-array name="config_autoBrightnessLcdBacklightValues">
-        <item>10</item>
-        <item>20</item>
-        <item>40</item>
-        <item>70</item>
-        <item>110</item>
-        <item>160</item>
-        <item>200</item>
-        <item>255</item>
-    </integer-array>
-
-    <!-- Screen brightness used to dim the screen when the user activity
-         timeout expires.  May be less than the minimum allowed brightness setting
-         that can be set by the user. -->
-    <integer name="config_screenBrightnessDim">10</integer>
-
-    <!-- Minimum screen brightness setting allowed by the power manager.
-         The user is forbidden from setting the brightness below this level. -->
-    <integer name="config_screenBrightnessSettingMinimum">1</integer>
-
-    <!-- Default LED on time for notification LED in milliseconds. -->
-    <integer name="config_defaultNotificationLedOn">500</integer>
-
-    <!-- Default LED off time for notification LED in milliseconds. -->
-    <integer name="config_defaultNotificationLedOff">2000</integer>
-
-    <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
-    <bool name="config_intrusiveNotificationLed">true</bool>
-
-    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
-    <bool name="config_intrusiveBatteryLed">true</bool>
-
-    <!-- When true use the linux /dev/input/event subsystem to detect the switch changes
-         on the headphone/microphone jack. When false use the older uevent framework. -->
-    <bool name="config_useDevInputEventForAudioJack">true</bool>
-
-    <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
-    <bool name="config_unplugTurnsOnScreen">true</bool>
-
-    <!-- Set to true to add links to Cell Broadcast app from Settings and MMS app. -->
-    <bool name="config_cellBroadcastAppLinks">true</bool>
-
-    <!-- Hardware keys present on the device, stored as a bit field.
-         This integer should equal the sum of the corresponding value for each
-         of the following keys present:
-             1 - Home
-             2 - Back
-             4 - Menu
-             8 - Assistant (search)
-            16 - App switch
-            32 - Camera
-            64 - Volume rocker
-         For example, a device with Home, Back and Menu keys would set this
-         config to 7. -->
-    <integer name="config_deviceHardwareKeys">83</integer>
-
-    <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
-         This integer should equal the sum of the corresponding value for each
-         of the following keys present:
-             1 - Home
-             2 - Back
-             4 - Menu
-             8 - Assistant (search)
-            16 - App switch
-            32 - Camera
-            64 - Volume rocker
-         For example, a device with Home, Back and Menu keys would set this
-         config to 7. -->
-    <integer name="config_deviceHardwareWakeKeys">64</integer>
-
-    <!-- Control the behavior when the user long presses the home button.
-            0 - Nothing
-            1 - Menu key
-            2 - Recent apps view in SystemUI
-            3 - Launch assist intent
-            4 - Voice Search
-            5 - In-app Search
-         This needs to match the constants in
-         policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
-    -->
-    <integer name="config_longPressOnHomeBehavior">3</integer>
-
-    <!-- Control the behavior when the user long presses the app switch button.
-            0 - Nothing
-            1 - Menu key
-            2 - Recent apps view in SystemUI
-            3 - Launch assist intent
-            4 - Voice Search
-            5 - In-app Search
-            6 - Launch camera
-            7 - Turn screen off
-            8 - Last app
-         This needs to match the constants in
-         services/core/java/com/android/server/policy/PhoneWindowManager.java
-    -->
-    <integer name="config_longPressOnAppSwitchBehavior">1</integer>
-
-    <!-- Wifi driver supports batched scan -->
-    <bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
-
-    <!-- Boolean indicating whether the wifi chipset supports background scanning mechanism.
-         This mechanism allows the host to remain in suspend state and the dongle to actively
-         scan and wake the host when a configured SSID is detected by the dongle. This chipset
-         capability can provide power savings when wifi needs to be always kept on. -->
-    <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
-
-    <!-- Boolean indicating whether Hotspot 2.0/Passpoint and ANQP queries is enabled -->
-    <bool translatable="false" name="config_wifi_hotspot2_enabled">true</bool>
+    <!-- Set this to true to enable the platform's auto-power-save modes like doze and
+         app standby.  These are not enabled by default because they require a standard
+         cloud-to-device messaging service for apps to interact correctly with the modes
+         (such as to be able to deliver an instant message to the device even when it is
+         dozing).  This should be enabled if you have such services and expect apps to
+         correctly use them when installed on your device.  Otherwise, keep this disabled
+         so that applications can still use their own mechanisms. -->
+    <bool name="config_enableAutoPowerModes">true</bool>
 
     <!-- This string array should be overridden by the device to present a list of network
          attributes.  This is used by the connectivity manager to decide which networks can coexist
@@ -209,6 +73,8 @@
          should be empty.  An example would be "softap.*" -->
     <string-array translatable="false" name="config_tether_wifi_regexs">
         <item>wlan0</item>
+        <item>wigig0</item>
+        <item>softap0</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -230,30 +96,27 @@
         <item>7</item>
     </integer-array>
 
-    <!-- Boolean indicating if restoring network selection should be skipped -->
-    <!-- The restoring is handled by modem if it is true-->
-    <bool translatable="false" name="skip_restoring_network_selection">true</bool>
+    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
+    <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
 
-    <!-- MMS user agent string -->
-    <string name="config_mms_user_agent" translatable="false">Android-Mms/2.0</string>
+    <!-- Boolean indicating whether Hotspot 2.0/Passpoint and ANQP queries is enabled -->
+    <bool translatable="false" name="config_wifi_hotspot2_enabled">true</bool>
 
-    <!-- MMS user agent prolfile url -->
-    <string name="config_mms_user_agent_profile_url" translatable="false">http://www.google.com/oha/rdf/ua-profile-kila.xml</string>
+    <!-- Boolean indicating whether the wifi chipset supports background scanning mechanism.
+         This mechanism allows the host to remain in suspend state and the dongle to actively
+         scan and wake the host when a configured SSID is detected by the dongle. This chipset
+         capability can provide power savings when wifi needs to be always kept on. -->
+    <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
 
-    <!-- Flag indicating if the speed up audio on mt call code should be executed -->
-    <bool name="config_speed_up_audio_on_mt_calls">true</bool>
+    <!-- Wifi driver supports batched scan -->
+    <bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
 
-    <!-- Set to true if the wifi display supports compositing content stored
-         in gralloc protected buffers.  For this to be true, there must exist
-         a protected hardware path for surface flinger to composite and send
-         protected buffers to the wifi display video encoder.
-         If this flag is false, we advise applications not to use protected
-         buffers (if possible) when presenting content to a wifi display because
-         the content may be blanked.
-         This flag controls whether the {@link Display#FLAG_SUPPORTS_PROTECTED_BUFFERS}
-         flag is set for wifi displays.
-    -->
-    <bool name="config_wifiDisplaySupportsProtectedBuffers">true</bool>
+    <!-- Flag indicating whether the we should enable the automatic brightness in Settings.
+         Software implementation will be used if config_hardware_auto_brightness_available is not set -->
+    <bool name="config_automatic_brightness_available">true</bool>
+
+    <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
+    <bool name="config_unplugTurnsOnScreen">true</bool>
 
     <!-- Indicate whether closing the lid causes the device to go to sleep and opening
          it causes the device to wake up.
@@ -267,33 +130,193 @@
          The default is false. -->
     <bool name="config_suspendWhenScreenOffDueToProximity">true</bool>
 
+    <!-- Default LED on time for notification LED in milliseconds. -->
+    <integer name="config_defaultNotificationLedOn">500</integer>
+
+    <!-- Default LED off time for notification LED in milliseconds. -->
+    <integer name="config_defaultNotificationLedOff">2000</integer>
+
+    <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveNotificationLed">true</bool>
+
+    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveBatteryLed">true</bool>
+
     <!-- Is the device capable of hot swapping an UICC Card -->
     <bool name="config_hotswapCapable">true</bool>
 
-    <!-- Flag specifying whether VoLTE is available on device -->
-    <bool name="config_device_volte_available">true</bool>
+    <!-- Control the behavior when the user long presses the home button.
+            0 - Nothing
+            1 - Menu key
+            2 - Recent apps view in SystemUI
+            3 - Launch assist intent
+            4 - Voice Search
+            5 - In-app Search
+            6 - Launch camera
+            7 - Sleep
+            8 - Last app
+            9 - Toggle split screen
+         This needs to match the constants in
+         policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+    -->
+    <integer name="config_longPressOnHomeBehavior">3</integer>
 
-    <!-- Flag specifying whether VoLTE should be available for carrier: independent of
-         carrier provisioning. If false: hard disabled. If true: then depends on carrier
-         provisioning, availability etc -->
-    <bool name="config_carrier_volte_available">true</bool>
+    <!-- Control the behavior when the user long presses the app switch button.
+            0 - Nothing
+            1 - Menu key
+            2 - Recent apps view in SystemUI
+            3 - Launch assist intent
+            4 - Voice Search
+            5 - In-app Search
+            6 - Launch camera
+            7 - Sleep
+            8 - Last app
+            9 - Toggle split screen
+         This needs to match the constants in
+         services/core/java/com/android/server/policy/policy/impl/PhoneWindowManager.java
+    -->
+    <integer name="config_longPressOnAppSwitchBehavior">1</integer>
 
-    <!-- Config determines whether to update phone object when voice registration
-         state changes. Voice radio tech change will always trigger an update of
-         phone object irrespective of this config -->
-    <bool name="config_switch_phone_on_voice_reg_state_change">false</bool>
+    <!-- Hardware keys present on the device, stored as a bit field.
+         This integer should equal the sum of the corresponding value for each
+         of the following keys present:
+             1 - Home
+             2 - Back
+             4 - Menu
+             8 - Assistant (search)
+            16 - App switch
+            32 - Camera
+            64 - Volume rocker
+         For example, a device with Home, Back and Menu keys would set this
+         config to 7. -->
+    <integer name="config_deviceHardwareKeys">83</integer>
 
-    <!-- Flag indicating if the speed up audio on mt call code should be executed -->
-    <bool name="config_speed_up_audio_on_mt_calls">true</bool>
+    <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
+         This integer should equal the sum of the corresponding value for each
+         of the following keys present:
+             1 - Home
+             2 - Back
+             4 - Menu
+             8 - Assistant (search)
+            16 - App switch
+            32 - Camera
+            64 - Volume rocker
+         For example, a device with Home, Back and Menu keys would set this
+         config to 7. -->
+    <integer name="config_deviceHardwareWakeKeys">64</integer>
 
-    <!--  Maximum number of supported users -->
-    <integer name="config_multiuserMaximumUsers">4</integer>
+    <!-- Minimum screen brightness setting allowed by the power manager.
+         The user is forbidden from setting the brightness below this level. -->
+    <integer name="config_screenBrightnessSettingMinimum">1</integer>
 
-    <!-- Whether UI for multi user should be shown -->
-    <bool name="config_enableMultiUserUI">true</bool>
+    <!-- Screen brightness used to dim the screen while dozing in a very low power state.
+         May be less than the minimum allowed brightness setting
+         that can be set by the user. -->
+    <integer name="config_screenBrightnessDoze">17</integer>
 
-    <!-- Flag indicating which package name can access the persistent data partition -->
-    <string name="config_persistentDataPackageName" translatable="false">com.google.android.gms</string>
+    <!-- Screen brightness used to dim the screen when the user activity
+         timeout expires.  May be less than the minimum allowed brightness setting
+         that can be set by the user. -->
+    <integer name="config_screenBrightnessDim">2</integer>
+
+    <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
+         The N entries of this array define N + 1 control points as follows:
+         (1-based arrays)
+
+         Point 1:            (0, value[1]):             lux <= 0
+         Point 2:     (level[1], value[2]):  0        < lux <= level[1]
+         Point 3:     (level[2], value[3]):  level[2] < lux <= level[3]
+         ...
+         Point N+1: (level[N], value[N+1]):  level[N] < lux
+
+         The control points must be strictly increasing.  Each control point
+         corresponds to an entry in the brightness backlight values arrays.
+         For example, if LUX == level[1] (first element of the levels array)
+         then the brightness will be determined by value[2] (second element
+         of the brightness values array).
+
+         Spline interpolation is used to determine the auto-brightness
+         backlight values for LUX levels between these control points.
+
+         Must be overridden in platform specific overlays -->
+    <integer-array name="config_autoBrightnessLevels">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>50</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+        <item>700</item>
+        <item>800</item>
+        <item>1000</item>
+        <item>1200</item>
+        <item>1600</item>
+        <item>2200</item>
+        <item>3000</item>
+        <item>4000</item>
+    </integer-array>
+
+    <!-- Array of output values for LCD backlight corresponding to the LUX values
+         in the config_autoBrightnessLevels array.  This array should have size one greater
+         than the size of the config_autoBrightnessLevels array.
+         The brightness values must be between 0 and 255 and be non-decreasing.
+         This must be overridden in platform specific overlays -->
+    <integer-array name="config_autoBrightnessLcdBacklightValues">
+        <item>2</item>
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+        <item>12</item>
+        <item>20</item>
+        <item>30</item>
+        <item>46</item>
+        <item>49</item>
+        <item>54</item>
+        <item>61</item>
+        <item>65</item>
+        <item>70</item>
+        <item>76</item>
+        <item>82</item>
+        <item>87</item>
+        <item>98</item>
+        <item>108</item>
+        <item>131</item>
+        <item>161</item>
+        <item>230</item>
+        <item>255</item>
+    </integer-array>
+
+    <!-- Package name providing network location support. Used only when
+         config_enableNetworkLocationOverlay is false. -->
+    <string name="config_networkLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
+
+    <!-- Package name providing fused location support. Used only when
+         config_enableFusedLocationOverlay is false. -->
+    <string name="config_fusedLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
+
+    <!-- Boolean indicating if current platform supports BLE peripheral mode -->
+    <bool name="config_bluetooth_le_peripheral_mode_supported">true</bool>
+
+    <!-- Operating volatage for bluetooth controller. 0 by default-->
+    <integer translatable="false" name="config_bluetooth_operating_voltage_mv">4000</integer>
+
+    <!-- Boolean indicating if restoring network selection should be skipped -->
+    <!-- The restoring is handled by modem if it is true-->
+    <bool translatable="false" name="skip_restoring_network_selection">true</bool>
+
+    <!-- MMS user agent string -->
+    <string name="config_mms_user_agent" translatable="false">Android-Mms/2.0</string>
+
+    <!-- MMS user agent prolfile url -->
+    <string name="config_mms_user_agent_profile_url" translatable="false"
+            >http://www.google.com/oha/rdf/ua-profile-kila.xml</string>
 
     <!-- ComponentName of a dream to show whenever the system would otherwise have
          gone to sleep.  When the PowerManager is asked to go to sleep, it will instead
@@ -301,46 +324,41 @@
          to put the display into a low power state and allow the application processor
          to be suspended.  When the dream ends, the system will go to sleep as usual.
          Specify the component name or an empty string if none.
+
          Note that doze dreams are not subject to the same start conditions as ordinary dreams.
          Doze dreams will run whenever the power manager is in a dozing state. -->
     <string name="config_dozeComponent" translatable="false">com.android.systemui/com.android.systemui.doze.DozeService</string>
-
-    <!-- Power Management: Specifies whether to decouple the interactive state of the
-         device from the display on/off state.
-         When false, setInteractive(..., true) will be called before the display is turned on
-         and setInteractive(..., false) will be called after the display is turned off.
-         This mode provides best compatibility for devices that expect the interactive
-         state to be tied to the display state.
-         When true, setInteractive(...) will be called independently of whether the display
-         is being turned on or off.  This mode enables the power manager to reduce
-         clocks and disable the touch controller while the display is on.
-         This resource should be set to "true" when a doze component has been specified
-         to maximize power savings but not all devices support it.
-         Refer to power.h for details.
-    -->
-    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
-
-    <!-- Screen brightness used to dim the screen while dozing in a very low power state.
-         May be less than the minimum allowed brightness setting
-         that can be set by the user. -->
-    <integer name="config_screenBrightnessDoze">17</integer>
 
     <!-- If true, the doze component is not started until after the screen has been
          turned off and the screen off animation has been performed. -->
     <bool name="config_dozeAfterScreenOff">true</bool>
 
-    <!-- Set this to true to enable the platform's auto-power-save modes like doze and
-         app standby.  These are not enabled by default because they require a standard
-         cloud-to-device messaging service for apps to interact correctly with the modes
-         (such as to be able to deliver an instant message to the device even when it is
-         dozing).  This should be enabled if you have such services and expect apps to
-         correctly use them when installed on your device.  Otherwise, keep this disabled
-         so that applications can still use their own mechanisms. -->
-    <bool name="config_enableAutoPowerModes">true</bool>
+    <!-- Power Management: Specifies whether to decouple the interactive state of the
+         device from the display on/off state.
 
-   <!-- Configure wifi tcp buffersizes in the form:
-         rmem_min,rmem_def,rmem_max,wmem_min,wmem_def,wmem_max -->
-    <string name="config_wifi_tcp_buffers" translatable="false">524288,1048576,2097152,262144,524288,1048576</string>
+         When false, setInteractive(..., true) will be called before the display is turned on
+         and setInteractive(..., false) will be called after the display is turned off.
+         This mode provides best compatibility for devices that expect the interactive
+         state to be tied to the display state.
+
+         When true, setInteractive(...) will be called independently of whether the display
+         is being turned on or off.  This mode enables the power manager to reduce
+         clocks and disable the touch controller while the display is on.
+
+         This resource should be set to "true" when a doze component has been specified
+         to maximize power savings but not all devices support it.
+
+         Refer to power.h for details.
+    -->
+    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
+
+    <!-- Set to true to add links to Cell Broadcast app from Settings and MMS app. -->
+    <bool name="config_cellBroadcastAppLinks">true</bool>
+
+    <!--  Maximum number of supported users -->
+    <integer name="config_multiuserMaximumUsers">4</integer>
+    <!-- Whether UI for multi user should be shown -->
+    <bool name="config_enableMultiUserUI">true</bool>
 
     <!-- Configure mobile tcp buffer sizes in the form:
          rat-name:rmem_min,rmem_def,rmem_max,wmem_min,wmem_def,wmem_max
@@ -359,24 +377,48 @@
         <item>evdo:4094,87380,524288,4096,16384,262144</item>
     </string-array>
 
-    <!-- Boolean indicating if current platform supports BLE peripheral mode -->
-    <bool name="config_bluetooth_le_peripheral_mode_supported">true</bool>
+    <!-- When true use the linux /dev/input/event subsystem to detect the switch changes
+         on the headphone/microphone jack. When false use the older uevent framework. -->
+    <bool name="config_useDevInputEventForAudioJack">true</bool>
 
-    <!-- Operating volatage for bluetooth controller. 0 by default-->
-    <integer translatable="false" name="config_bluetooth_operating_voltage_mv">3300</integer>
+    <!-- Set to true if the wifi display supports compositing content stored
+         in gralloc protected buffers.  For this to be true, there must exist
+         a protected hardware path for surface flinger to composite and send
+         protected buffers to the wifi display video encoder.
 
-    <!-- Enable overlay for all location components. -->
-    <string name="config_networkLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
-    <string name="config_fusedLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
+         If this flag is false, we advise applications not to use protected
+         buffers (if possible) when presenting content to a wifi display because
+         the content may be blanked.
+
+         This flag controls whether the {@link Display#FLAG_SUPPORTS_PROTECTED_BUFFERS}
+         flag is set for wifi displays.
+    -->
+    <bool name="config_wifiDisplaySupportsProtectedBuffers">true</bool>
+
+    <!-- Flag indicating if the speed up audio on mt call code should be executed -->
+    <bool name="config_speed_up_audio_on_mt_calls">true</bool>
 
     <!-- Flag indicating which package name can access the persistent data partition -->
     <string name="config_persistentDataPackageName" translatable="false">com.google.android.gms</string>
 
-    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
-    <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
+    <!-- Flag specifying whether VoLTE is available on device -->
+    <bool name="config_device_volte_available">true</bool>
+
+    <!-- Flag specifying whether VoLTE should be available for carrier: independent of
+         carrier provisioning. If false: hard disabled. If true: then depends on carrier
+         provisioning, availability etc -->
+    <bool name="config_carrier_volte_available">true</bool>
 
     <!-- Flag specifying whether WFC over IMS is available on device -->
     <bool name="config_device_wfc_ims_available">true</bool>
+
+    <!-- Config determines whether to update phone object when voice registration
+         state changes. Voice radio tech change will always trigger an update of
+         phone object irrespective of this config -->
+    <bool name="config_switch_phone_on_voice_reg_state_change">false</bool>
+
+    <!-- Whether device supports double tap to wake -->
+    <bool name="config_supportDoubleTapWake">true</bool>
 
     <!-- Support in Surfaceflinger for blur layers.
          NOTE: This requires additional hardware-specific code. -->
@@ -384,8 +426,5 @@
 
     <!-- Whether notify fingerprint client of successful cancelled authentication -->
     <bool name="config_notifyClientOnFingerprintCancelSuccess">true</bool>
-
-    <!-- Whether device supports double tap to wake -->
-    <bool name="config_supportDoubleTapWake">true</bool>
 
 </resources>
