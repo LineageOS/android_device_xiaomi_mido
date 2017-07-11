@@ -1914,6 +1914,8 @@ etc/firmware/ice40.bin
 # Wi-Fi
 bin/cnss-daemon
 bin/cnss_diag
+bin/fstman
+lib/modules/pronto/pronto_wlan.ko
 
 # Kernel modules
 lib/modules/exfat.ko
@@ -1925,7 +1927,6 @@ vendor/bin/mdtpd
 # unknown
 bin/diag_mdlog
 bin/fmhal_service
-bin/fstman
 bin/kernellog.sh
 bin/mlipayd
 bin/mmbn-daemon
