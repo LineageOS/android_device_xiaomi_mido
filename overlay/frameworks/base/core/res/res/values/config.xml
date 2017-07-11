@@ -119,8 +119,8 @@
             32 - Camera
             64 - Volume rocker
          For example, a device with Home, Back and Menu keys would set this
-         config to 7. -->
-    <integer name="config_deviceHardwareWakeKeys">64</integer>
+         config to 7. 
+    <integer name="config_deviceHardwareWakeKeys">64</integer -->
 
     <!-- Control the behavior when the user long presses the home button.
             0 - Nothing
@@ -146,8 +146,8 @@
             8 - Last app
          This needs to match the constants in
          services/core/java/com/android/server/policy/PhoneWindowManager.java
-    -->
-    <integer name="config_longPressOnAppSwitchBehavior">1</integer>
+    
+    <integer name="config_longPressOnAppSwitchBehavior">1</integer -->
 
     <!-- Wifi driver supports batched scan -->
     <bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
@@ -382,8 +382,8 @@
     <bool name="config_device_wfc_ims_available">true</bool>
 
     <!-- Support in Surfaceflinger for blur layers.
-         NOTE: This requires additional hardware-specific code. -->
-    <bool name="config_uiBlurEnabled">true</bool>
+         NOTE: This requires additional hardware-specific code.
+    <bool name="config_uiBlurEnabled">true</bool -->
 
     <!-- Whether notify fingerprint client of successful cancelled authentication -->
     <bool name="config_notifyClientOnFingerprintCancelSuccess">true</bool>
