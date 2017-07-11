@@ -146,6 +146,9 @@ vendor/lib64/libxml.so
 # Camera
 bin/mm-qcamera-app
 bin/mm-qcamera-daemon
+etc/android_model_facea.dat
+etc/android_model_faceg.dat
+etc/sdm_ys_32p_120_21_5_perturb50.bin
 lib/hw/camera.msm8953.so
 lib/libmm-qcamera.so
 lib/libmmcamera_interface.so
@@ -343,6 +346,17 @@ vendor/lib64/libmmcamera_tintless_algo.so
 vendor/lib64/libmmcamera_tintless_bg_pca_algo.so
 vendor/lib64/libmorpho_group_portrait.so
 vendor/lib64/libmorpho_panorama_gp.so
+
+# Camera extension by xiaomi
+etc/age_gender_bg
+etc/crown_156_128.bin
+etc/face_goodly_208_180
+etc/face_ravishing_238_224
+etc/face_splendid_274_200
+etc/people_gender.dat
+etc/watermark_font_2300_3199.dat
+lib/libMiCameraHal.so
+vendor/lib/lib_lowlight.so
 
 # Camera actuators
 vendor/lib/libactuator_ad5816g.so
@@ -1456,9 +1470,7 @@ etc/camera/s5k3m2xx_chromatix.xml
 etc/camera/s5k3p3sm_chromatix.xml
 
 # Camera firmware
-etc/firmware/cpp_firmware_v1_10_0.fw
 etc/firmware/cpp_firmware_v1_1_1.fw
-etc/firmware/cpp_firmware_v1_12_0.fw
 etc/firmware/cpp_firmware_v1_1_6.fw
 etc/firmware/cpp_firmware_v1_2_0.fw
 etc/firmware/cpp_firmware_v1_4_0.fw
@@ -1466,6 +1478,8 @@ etc/firmware/cpp_firmware_v1_5_0.fw
 etc/firmware/cpp_firmware_v1_5_2.fw
 etc/firmware/cpp_firmware_v1_6_0.fw
 etc/firmware/cpp_firmware_v1_8_0.fw
+etc/firmware/cpp_firmware_v1_10_0.fw
+etc/firmware/cpp_firmware_v1_12_0.fw
 
 # Charger
 bin/hvdcp_opti
