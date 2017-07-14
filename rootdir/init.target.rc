@@ -61,11 +61,6 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
 on init
    write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
 
-service qfp-daemon /system/bin/qfp-daemon
-   class late_start
-   user system
-   group system drmrpc
-
 # Allow usb charging to be disabled peristently
 on property:persist.usb.chgdisabled=1
     write /sys/class/power_supply/battery/charging_enabled 0
@@ -73,37 +68,10 @@ on property:persist.usb.chgdisabled=1
 on property:persist.usb.chgdisabled=0
     write /sys/class/power_supply/battery/charging_enabled 1
 
-service qrngd /system/bin/qrngd -f
-   class main
-   user root
-   group root
-
-service qrngp /system/bin/qrngp -f
-   class main
-   user root
-   group root
-   oneshot
-   disabled
-
-on property:sys.boot_completed=1
-   start qrngp
-
 service qseecomd /system/bin/qseecomd
    class core
    user root
    group root
-
-service perfd /system/vendor/bin/perfd
-   class main
-   user root
-   disabled
-
-service gamed /system/vendor/bin/gamed
-   class main
-   user system
-   group system
-   disabled
-   socket gamed seqpacket 0640 system system
 
 service thermal-engine /system/vendor/bin/thermal-engine
    class main
@@ -125,7 +93,6 @@ service audiod /system/bin/audiod
 
 on boot
     start rmt_storage
-    insmod /system/lib/modules/adsprpc.ko
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -166,12 +133,6 @@ on property:sys.ims.DATA_DAEMON_STATUS=1
     start ims_rtp_daemon
     start imscmservice
 
-service hbtp /system/vendor/bin/hbtp_daemon
-    class main
-    user system
-    group system
-    disabled
-
 service ppd /system/vendor/bin/mm-pp-dpps
     class late_start
     disabled
@@ -206,18 +167,6 @@ on charger
     start qcom-post-boot
     setprop persist.sys.usb.config mass_storage
     start hvdcp_opti
-
-service dts_configurator /system/bin/dts_configurator
-    class late_start
-    user system
-    group media audio
-    oneshot
-
-service dtseagleservice /system/bin/dts_eagle_service
-    class late_start
-    user system
-    group audio media
-    disabled
 
 service adsprpcd /system/bin/adsprpcd
     class main
@@ -255,148 +204,6 @@ service energy-awareness /system/bin/energy-awareness
     group system
     oneshot
 
-service getcolorid /system/bin/getcolorid
-    class core
-    oneshot
-
-# add for function test
-service chmodtpon /system/bin/chmodtp o 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.chmodtp=1
-    start chmodtpon
-
-service chmodtpoff /system/bin/chmodtp f 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.chmodtp=2
-    start chmodtpoff
-
-service chmodtp3on /system/bin/chmodtp o 3
-    user root
-    oneshot
-    disabled
-
-on property:sys.chmodtp3=1
-    start chmodtp3on
-
-service chmodtp3off /system/bin/chmodtp f 3
-    user root
-    oneshot
-    disabled
-
-on property:sys.chmodtp3=2
-    start chmodtp3off
-
-service whiteflashon /system/bin/factory_bin w 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.whiteflashon=1
-    start whiteflashon
-
-service whiteflashoff /system/bin/factory_bin w 0
-    user root
-    oneshot
-    disabled
-
-on property:sys.whiteflashoff=1
-    start whiteflashoff
-
-service yellowflashon /system/bin/factory_bin y 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.yellowflashon=1
-    start yellowflashon
-
-service yellowflashoff /system/bin/factory_bin y 0
-    user root
-    oneshot
-    disabled
-
-on property:sys.yellowflashoff=1
-    start yellowflashoff
-
-service chargingenable /system/bin/factory_bin c 1
-    user root
-    oneshot
-    disabled
-
-on property:sys.charging.enable=1
-    start chargingenable
-
-service chargingdisable /system/bin/factory_bin c 0
-    user root
-    oneshot
-    disabled
-
-on property:sys.charging.disable=1
-    start chargingdisable
-
-service keylighton /system/bin/factory_bin k 1
-    user root
-    oneshot
-    disabled
-on property:sys.keylighton=1
-    start keylighton
-
-service keylightoff /system/bin/factory_bin k 0
-    user root
-    oneshot
-    disabled
-on property:sys.keylightoff=1
-    start keylightoff
-
-service redledon /system/bin/factory_bin r 1
-    user root
-    oneshot
-    disabled
-on property:sys.redledon=1
-    start redledon
-
-service redledoff /system/bin/factory_bin r 0
-    user root
-    oneshot
-    disabled
-on property:sys.redledoff=1
-    start redledoff
-
-service greenledon /system/bin/factory_bin g 1
-    user root
-    oneshot
-    disabled
-on property:sys.greenledon=1
-    start greenledon
-
-service greenledoff /system/bin/factory_bin g 0
-    user root
-    oneshot
-    disabled
-on property:sys.greenledoff=1
-    start greenledoff
-
-service blueledon /system/bin/factory_bin b 1
-    user root
-    oneshot
-    disabled
-on property:sys.blueledon=1
-    start blueledon
-
-service blueledoff /system/bin/factory_bin b 0
-    user root
-    oneshot
-    disabled
-on property:sys.blueledoff=1
-    start blueledoff
-# add end
-
 on boot
 	write /dev/cpuset/top-app/cpus 0-7
 	write /dev/cpuset/top-app/boost/cpus 4-7
@@ -404,12 +211,3 @@ on boot
 	write /dev/cpuset/foreground/boost/cpus 0-6
 	write /dev/cpuset/background/cpus 0-1
 	write /dev/cpuset/system-background/cpus 0-3
-
-service mtservice /system/bin/mtd
-    class late_start
-
-service vsimservice /system/bin/vsimd
-    class late_start
-
-service mlipayservice /system/bin/mlipayd
-    class late_start
