@@ -60,20 +60,6 @@ vendor/lib64/soundfx/libqcreverb.so
 vendor/lib64/soundfx/libqcvirt.so
 
 # Audio ACDB
-etc/acdbdata/MTP/MTP_Bluetooth_cal.acdb
-etc/acdbdata/MTP/MTP_General_cal.acdb
-etc/acdbdata/MTP/MTP_Global_cal.acdb
-etc/acdbdata/MTP/MTP_Handset_cal.acdb
-etc/acdbdata/MTP/MTP_Hdmi_cal.acdb
-etc/acdbdata/MTP/MTP_Headset_cal.acdb
-etc/acdbdata/MTP/MTP_Speaker_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_Bluetooth_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_General_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_Global_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_Handset_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_Hdmi_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_Headset_cal.acdb
-etc/acdbdata/MTP/msm8953-tasha-snd-card/MTP_WCD9335_Speaker_cal.acdb
 etc/acdbdata/QRD/QRD_Bluetooth_cal.acdb
 etc/acdbdata/QRD/QRD_General_cal.acdb
 etc/acdbdata/QRD/QRD_Global_cal.acdb
@@ -84,11 +70,9 @@ etc/acdbdata/QRD/QRD_Speaker_cal.acdb
 
 # Bluetooth
 bin/btnvtool
-bin/dun-server
 bin/hci_qcomm_init
 bin/wcnss_filter
 vendor/lib/libbtnv.so
-vendor/lib64/libCommandSvc.so
 vendor/lib64/libbtnv.so
 
 # Bluetooth firmware
@@ -280,14 +264,6 @@ vendor/lib/libtrueportrait.so
 -vendor/lib/libts_detected_face_hal.so
 -vendor/lib/libts_face_beautify_hal.so
 vendor/lib/libubifocus.so
-vendor/lib64/libmmcamera2_frame_algorithm.so
-vendor/lib64/libmmcamera2_is.so
-vendor/lib64/libmmcamera2_q3a_core.so
-vendor/lib64/libmmcamera2_stats_algorithm.so
-vendor/lib64/libmmcamera_cac3_lib.so
-vendor/lib64/libmmcamera_dbg.so
-vendor/lib64/libmmcamera_tintless_algo.so
-vendor/lib64/libmmcamera_tintless_bg_pca_algo.so
 
 # Camera actuators
 vendor/lib/libactuator_dw9763.so
@@ -822,7 +798,6 @@ vendor/lib64/hw/gatekeeper.msm8953.so
 # GPS
 -framework/com.qti.location.sdk.jar
 -priv-app/com.qualcomm.location/com.qualcomm.location.apk
-bin/garden_app
 bin/loc_launcher
 bin/lowi-server
 bin/xtwifi-client
@@ -953,16 +928,9 @@ vendor/lib64/libuiblur.so|4b3fabf5ded7c4af531abde681676fc5e9248494
 etc/firmware/a506_zap.b00
 etc/firmware/a506_zap.b01
 etc/firmware/a506_zap.b02
-etc/firmware/a506_zap.elf
 etc/firmware/a506_zap.mdt
-etc/firmware/a530_gpmu.fw2
 etc/firmware/a530_pfp.fw
 etc/firmware/a530_pm4.fw
-etc/firmware/a530v1_pfp.fw
-etc/firmware/a530v1_pm4.fw
-etc/firmware/a530v2_seq.fw2
-etc/firmware/a530v3_gpmu.fw2
-etc/firmware/a530v3_seq.fw2
 
 # Ipacm
 bin/ipacm-diag
@@ -984,7 +952,6 @@ lib64/libstagefright_soft_flacdec.so
 lib64/libvpplibrary.so
 vendor/lib/libAlacSwDec.so
 vendor/lib/libApeSwDec.so
-vendor/lib/libFlacSwDec.so
 vendor/lib/libI420colorconvert.so
 vendor/lib/libOmxAacDec.so
 vendor/lib/libOmxAlacDec.so
@@ -1003,7 +970,6 @@ vendor/lib/libmmsw_math.so
 vendor/lib/libmmsw_opencl.so
 vendor/lib/libmmsw_platform.so
 vendor/lib/libvqzip.so
-vendor/lib64/libFlacSwDec.so
 vendor/lib64/libI420colorconvert.so
 vendor/lib64/libOmxAacDec.so
 vendor/lib64/libOmxEvrcDec.so
@@ -1029,8 +995,6 @@ bin/msm_irqbalance
 vendor/bin/perfd
 vendor/lib/libqti-iop-client.so
 vendor/lib/libqti-perfd-client.so
-vendor/lib64/libqti-at.so
-vendor/lib64/libqti-gt.so
 vendor/lib64/libqti-iop-client.so
 vendor/lib64/libqti-perfd-client.so
 
@@ -1186,15 +1150,10 @@ vendor/lib/libTimeService.so
 -vendor/lib64/libtime_genoff.so
 vendor/lib64/libTimeService.so
 
-# USB
-etc/firmware/ice40.bin
-
 # Widevine
 vendor/lib/libWVStreamControlAPI_L3.so|61673304827483d44b735a3dd08f0783d10ce92d
 vendor/lib/libwvdrm_L3.so|7e77482481197997294a834bfbc817a01b6075cd
 vendor/lib/mediadrm/libwvdrmengine.so|70419ce1f8eb6bd3aa36234f8d7e8003569efc9c
 
 # Wi-Fi
-bin/cnss-daemon
-bin/cnss_diag
 bin/wcnss_service

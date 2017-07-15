@@ -116,8 +116,6 @@ vidc.disable.split.mode=1
 vidc.enc.disable.pq=true
 
 # Perf
-ro.vendor.gt_library=libqti-gt.so
-ro.vendor.at_library=libqti-at.so
 ro.vendor.extension_library=libqti-perfd-client.so
 ro.am.reschedule_service=true
 ro.sys.fw.dex2oat_thread_count=4
