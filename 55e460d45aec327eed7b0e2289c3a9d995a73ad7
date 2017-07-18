@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9779d04_3fe85f6b",
+        "filename": "rootdir/init.qcom.rc",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2017-07-18T16:31:42Z",
+      "side": 1,
+      "message": "unused",
+      "range": {
+        "startLine": 469,
+        "startChar": 0,
+        "endLine": 473,
+        "endChar": 11
+      },
+      "revId": "55e460d45aec327eed7b0e2289c3a9d995a73ad7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6022194f_5d6a31dc",
+        "filename": "rootdir/init.qcom.rc",
+        "patchSetId": 1
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2017-07-18T16:31:42Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 613,
+        "startChar": 0,
+        "endLine": 632,
+        "endChar": 37
+      },
+      "revId": "55e460d45aec327eed7b0e2289c3a9d995a73ad7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
