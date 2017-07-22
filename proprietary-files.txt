@@ -29,6 +29,7 @@ etc/drc/drc_cfg_AZ.txt
 etc/surround_sound_3mic/surround_sound_rec_5.1.cfg
 etc/surround_sound_3mic/surround_sound_rec_AZ.cfg
 lib/soundfx/libdirac.so
+lib/libDiracAPI_SHARED.so
 vendor/etc/diracmobile.config
 vendor/lib/libacdb-fts.so
 vendor/lib/libacdbloader.so
