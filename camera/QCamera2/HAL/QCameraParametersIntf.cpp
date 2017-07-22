@@ -796,12 +796,12 @@ void QCameraParametersIntf::setMinPpMask(cam_feature_mask_t min_pp_mask)
 }
 
 bool QCameraParametersIntf::setStreamConfigure(bool isCapture,
-        bool previewAsPostview, bool resetConfig)
+        bool previewAsPostview, bool resetConfig, uint32_t* sessionId)
 {
     Mutex::Autolock lock(mLock);
     CHECK_PARAM_INTF(mImpl);
     return mImpl->setStreamConfigure(isCapture,
-            previewAsPostview, resetConfig);
+            previewAsPostview, resetConfig, sessionId);
 }
 
 int32_t QCameraParametersIntf::addOnlineRotation(uint32_t rotation,

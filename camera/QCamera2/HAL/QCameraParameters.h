@@ -335,6 +335,11 @@ private:
     //Longshot
     static const char KEY_QC_LONGSHOT_SUPPORTED[];
 
+    // Dual camera mode
+    static const char KEY_QC_DUAL_CAMERA_MODE[];
+    static const char KEY_QC_DUAL_CAMERA_ID[];
+    static const char KEY_QC_DUAL_CAMERA_MAIN_CAMERA[];
+
     //ZSL+HDR
     static const char KEY_QC_ZSL_HDR_SUPPORTED[];
 
@@ -758,7 +763,8 @@ public:
     const char *getASDStateString(cam_auto_scene_t scene);
     bool isHDRThumbnailProcessNeeded() { return m_bHDRThumbnailProcessNeeded; };
     void setMinPpMask(cam_feature_mask_t min_pp_mask) { m_nMinRequiredPpMask = min_pp_mask; };
-    bool setStreamConfigure(bool isCapture, bool previewAsPostview, bool resetConfig);
+    bool setStreamConfigure(bool isCapture, bool previewAsPostview, bool resetConfig,
+            uint32_t* sessionId);
     int32_t addOnlineRotation(uint32_t rotation, uint32_t streamId, int32_t device_rotation);
     uint8_t getNumOfExtraBuffersForImageProc();
     uint8_t getNumOfExtraBuffersForVideo();
@@ -976,6 +982,7 @@ private:
     int32_t setSecureMode(const QCameraParameters& );
     int32_t setCacheVideoBuffers(const QCameraParameters& params);
     int32_t setCustomParams(const QCameraParameters& params);
+    int32_t setDualCameraMode(const QCameraParameters& params);
     int32_t setAutoExposure(const char *autoExp);
     int32_t setPreviewFpsRange(int min_fps,int max_fps,
             int vid_min_fps,int vid_max_fps);
@@ -1253,6 +1260,9 @@ private:
     uint8_t mAecSkipDisplayFrameBound;
     bool m_bQuadraCfa;
     bool m_bSmallJpegSize;
+    bool m_bDualCameraMode;
+    int32_t mDualCamId;
+    bool m_bMainCamera;
 };
 
 }; // namespace qcamera
