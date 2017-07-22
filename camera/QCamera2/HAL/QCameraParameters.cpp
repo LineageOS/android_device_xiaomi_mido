@@ -213,6 +213,9 @@ const char QCameraParameters::KEY_QC_INSTANT_AEC_SUPPORTED_MODES[] = "instant-ae
 const char QCameraParameters::KEY_QC_INSTANT_CAPTURE_SUPPORTED_MODES[] = "instant-capture-values";
 const char QCameraParameters::KEY_QC_LED_CALIBRATION_MODES[] = "led-calibration-mode";
 
+const char QCameraParameters::KEY_QC_DUAL_CAMERA_MODE[] = "dual-camera-mode";
+const char QCameraParameters::KEY_QC_DUAL_CAMERA_ID[] = "dual-camera-id";
+const char QCameraParameters::KEY_QC_DUAL_CAMERA_MAIN_CAMERA[] = "dual-camera-main-camera";
 // Values for effect settings.
 const char QCameraParameters::EFFECT_EMBOSS[] = "emboss";
 const char QCameraParameters::EFFECT_SKETCH[] = "sketch";
@@ -991,7 +994,10 @@ QCameraParameters::QCameraParameters()
       mAecFrameBound(0),
       mAecSkipDisplayFrameBound(0),
       m_bQuadraCfa(false),
-      m_bSmallJpegSize(false)
+      m_bSmallJpegSize(false),
+      m_bDualCameraMode(false),
+      mDualCamId(0),
+      m_bMainCamera(false)
 {
     char value[PROPERTY_VALUE_MAX];
     // TODO: may move to parameter instead of sysprop
@@ -1124,7 +1130,10 @@ QCameraParameters::QCameraParameters(const String8 &params)
     mAecFrameBound(0),
     mAecSkipDisplayFrameBound(0),
     m_bQuadraCfa(false),
-    m_bSmallJpegSize(false)
+    m_bSmallJpegSize(false),
+    m_bDualCameraMode(false),
+    mDualCamId(0),
+    m_bMainCamera(false)
 {
     memset(&m_LiveSnapshotSize, 0, sizeof(m_LiveSnapshotSize));
     memset(&m_default_fps_range, 0, sizeof(m_default_fps_range));
@@ -5280,6 +5289,7 @@ int32_t QCameraParameters::updateParameters(const String8& p,
 
     if ((rc = setLongshotParam(params)))                final_rc = rc;
     if ((rc = setLedCalibration(params)))               final_rc = rc;
+    if ((rc = setDualCameraMode(params)))               final_rc = rc;
 
     setQuadraCfa(params);
     setVideoBatchSize();
@@ -6139,7 +6149,10 @@ int32_t QCameraParameters::initDefaultParameters()
     // Set default burst number
     set(KEY_QC_SNAPSHOT_BURST_NUM, 0);
     set(KEY_QC_NUM_RETRO_BURST_PER_SHUTTER, 0);
-
+    // Set default dual camera info
+    set(KEY_QC_DUAL_CAMERA_MODE,VALUE_OFF);
+    set(KEY_QC_DUAL_CAMERA_ID,0);
+    set(KEY_QC_DUAL_CAMERA_MAIN_CAMERA,VALUE_FALSE);
     //Get RAM size and disable features which are memory rich
     struct sysinfo info;
     sysinfo(&info);
@@ -6391,7 +6404,7 @@ void QCameraParameters::deinit()
                              m_pCamOpsTbl->camera_handle,
                              CAM_MAPPING_BUF_TYPE_PARM_BUF);
 
-        if (m_relCamSyncInfo.sync_control == CAM_SYNC_RELATED_SENSORS_ON) {
+        if (m_relCamSyncInfo.sync_control == CAM_SYNC_RELATED_SENSORS_ON || m_bDualCameraMode) {
             m_pCamOpsTbl->ops->unmap_buf(
                     m_pCamOpsTbl->camera_handle,
                     CAM_MAPPING_BUF_TYPE_SYNC_RELATED_SENSORS_BUF);
@@ -13089,7 +13102,6 @@ bool QCameraParameters::sendStreamConfigInfo(cam_stream_size_info_t &stream_conf
         LOGE("Failed to initialize group update table");
         return BAD_TYPE;
     }
-
     if (ADD_SET_PARAM_ENTRY_TO_BATCH(m_pParamBuf,
             CAM_INTF_META_STREAM_INFO, stream_config_info)) {
         LOGE("Failed to update table");
@@ -13119,7 +13131,7 @@ bool QCameraParameters::sendStreamConfigInfo(cam_stream_size_info_t &stream_conf
  *              none-zero failure code
  *==========================================================================*/
 bool QCameraParameters::setStreamConfigure(bool isCapture,
-        bool previewAsPostview, bool resetConfig) {
+        bool previewAsPostview, bool resetConfig, uint32_t* sessionId) {
 
     int32_t rc = NO_ERROR;
     cam_stream_size_info_t stream_config_info;
@@ -13407,8 +13419,67 @@ bool QCameraParameters::setStreamConfigure(bool isCapture,
                 stream_config_info.sub_format_type[k],
                 stream_config_info.is_type[k]);
     }
-
+    if (m_bMainCamera && m_bDualCameraMode){
+        stream_config_info.sync_type = CAM_TYPE_MAIN;
+    } else if (m_bDualCameraMode){
+        stream_config_info.sync_type = CAM_TYPE_AUX;
+    }
     rc = sendStreamConfigInfo(stream_config_info);
+    if (m_bDualCameraMode) {
+        if (m_pRelCamSyncHeap == NULL) {
+            m_pRelCamSyncHeap = new QCameraHeapMemory(QCAMERA_ION_USE_CACHE);
+            rc = m_pRelCamSyncHeap->allocate(1,
+                   sizeof(cam_sync_related_sensors_event_info_t), NON_SECURE);
+            if(rc != OK) {
+                rc = NO_MEMORY;
+                LOGE("Failed to allocate Related cam sync Heap memory");
+                delete m_pRelCamSyncHeap;
+                m_pRelCamSyncHeap = NULL;
+                return rc;
+            }
+
+            //Map memory for related cam sync buffer
+            rc = m_pCamOpsTbl->ops->map_buf(m_pCamOpsTbl->camera_handle,
+                    CAM_MAPPING_BUF_TYPE_SYNC_RELATED_SENSORS_BUF,
+                    m_pRelCamSyncHeap->getFd(0),
+                    sizeof(cam_sync_related_sensors_event_info_t),
+                    (cam_sync_related_sensors_event_info_t*)DATA_PTR(m_pRelCamSyncHeap,0));
+            if(rc < 0) {
+                LOGE("failed to map Related cam sync buffer");
+                rc = FAILED_TRANSACTION;
+                m_pRelCamSyncHeap->deallocate();
+                delete m_pRelCamSyncHeap;
+                m_pRelCamSyncHeap = NULL;
+                return rc;
+            }
+            m_pRelCamSyncBuf =
+                    (cam_sync_related_sensors_event_info_t*) DATA_PTR(m_pRelCamSyncHeap,0);
+        }
+        if (!resetConfig) {
+            m_pRelCamSyncBuf->sync_control = CAM_SYNC_RELATED_SENSORS_ON;
+        } else {
+            m_pRelCamSyncBuf->sync_control = CAM_SYNC_RELATED_SENSORS_OFF;
+        }
+        if (m_bMainCamera){
+             m_pRelCamSyncBuf->mode = CAM_MODE_PRIMARY;
+             m_pRelCamSyncBuf->type = CAM_TYPE_MAIN;
+             m_pRelCamSyncBuf->related_sensor_session_id = sessionId[mDualCamId];
+        } else {
+             m_pRelCamSyncBuf->mode = CAM_MODE_SECONDARY;
+             m_pRelCamSyncBuf->type = CAM_TYPE_AUX;
+             m_pRelCamSyncBuf->related_sensor_session_id = sessionId[mDualCamId];
+        }
+        rc = m_pCamOpsTbl->ops->sync_related_sensors(
+                m_pCamOpsTbl->camera_handle, m_pRelCamSyncBuf);
+        if(rc < 0) {
+            LOGE("failed to send sync command");
+            rc = FAILED_TRANSACTION;
+            m_pRelCamSyncHeap->deallocate();
+            delete m_pRelCamSyncHeap;
+            m_pRelCamSyncHeap = NULL;
+            return rc;
+        }
+    }
     updateSnapshotPpMask(stream_config_info);
     return rc;
 }
@@ -14735,6 +14806,43 @@ int32_t QCameraParameters::setLedCalibration(
     return NO_ERROR;
 }
 
+/*===========================================================================
+ * FUNCTION   : setDualCameraMode
+ *
+ * DESCRIPTION: set dual led calibration
+ *
+ * PARAMETERS :
+ *   @params  : user setting parameters
+ *
+ * RETURN     : int32_t type of status
+ *              NO_ERROR  -- success
+ *              none-zero failure code
+ *==========================================================================*/
+int32_t QCameraParameters::setDualCameraMode(const QCameraParameters& params)
+{
+    const char *str = params.get(KEY_QC_DUAL_CAMERA_MODE);
+    const char *prev_str = get(KEY_QC_DUAL_CAMERA_MODE);
+    int value;
+
+    if (str != NULL) {
+        if (prev_str == NULL || strcmp(str, prev_str) != 0) {
+            value = lookupAttr(ON_OFF_MODES_MAP, PARAM_MAP_SIZE(ON_OFF_MODES_MAP),
+                    str);
+            m_bDualCameraMode = value;
+        }
+    }
+    if (m_bDualCameraMode) {
+        mDualCamId  = params.getInt(KEY_QC_DUAL_CAMERA_ID);
+        str = params.get(KEY_QC_DUAL_CAMERA_MAIN_CAMERA);
+        prev_str = get(KEY_QC_DUAL_CAMERA_MAIN_CAMERA);
+        if (prev_str == NULL || strcmp(str, prev_str) != 0) {
+            value = lookupAttr(TRUE_FALSE_MODES_MAP, PARAM_MAP_SIZE(TRUE_FALSE_MODES_MAP),
+                    str);
+        m_bMainCamera = value;
+        }
+    }
+    return NO_ERROR;
+}
 
 /*===========================================================================
  * FUNCTION   : setLedCalibration

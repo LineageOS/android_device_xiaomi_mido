@@ -113,7 +113,7 @@ camera_device_ops_t QCamera2HardwareInterface::mCameraOps = {
     .release =                   QCamera2HardwareInterface::release,
     .dump =                      QCamera2HardwareInterface::dump,
 };
-
+uint32_t QCamera2HardwareInterface::sessionId[] = {0xDEADBEEF, 0xDEADBEEF, 0xDEADBEEF};
 /*===========================================================================
  * FUNCTION   : set_preview_window
  *
@@ -1979,7 +1979,8 @@ int QCamera2HardwareInterface::openCamera()
     memset(value, 0, sizeof(value));
     property_get("persist.camera.depth.focus.cb", value, "1");
     bDepthAFCallbacks = atoi(value);
-
+    mCameraHandle->ops->get_session_id(mCameraHandle->camera_handle,
+        &sessionId[mCameraId]);
     return NO_ERROR;
 
 error_exit3:
@@ -2227,7 +2228,7 @@ int QCamera2HardwareInterface::closeCamera()
     mCameraOpened = false;
 
     // Reset Stream config info
-    mParameters.setStreamConfigure(false, false, true);
+    mParameters.setStreamConfigure(false, false, true, sessionId);
 
     // deinit Parameters
     mParameters.deinit();
@@ -2632,7 +2633,11 @@ uint8_t QCamera2HardwareInterface::getBufNumRequired(cam_stream_type_t stream_ty
             if (is4k2kResolution(&dim)) {
                  //get additional buffer count
                  property_get("vidc.enc.dcvs.extra-buff-count", value, "0");
-                 bufferCnt += atoi(value);
+                 persist_cnt = atoi(value);
+                 if (persist_cnt >= 0 &&
+                     persist_cnt < CAM_MAX_NUM_BUFS_PER_STREAM) {
+                     bufferCnt += persist_cnt;
+                 }
             }
         }
         break;
@@ -2686,7 +2691,7 @@ uint8_t QCamera2HardwareInterface::getBufNumRequired(cam_stream_type_t stream_ty
     }
 
     LOGH("Buffer count = %d for stream type = %d", bufferCnt, stream_type);
-    if (CAM_MAX_NUM_BUFS_PER_STREAM < bufferCnt) {
+    if (bufferCnt < 0 || CAM_MAX_NUM_BUFS_PER_STREAM < bufferCnt) {
         LOGW("Buffer count %d for stream type %d exceeds limit %d",
                  bufferCnt, stream_type, CAM_MAX_NUM_BUFS_PER_STREAM);
         return CAM_MAX_NUM_BUFS_PER_STREAM;
@@ -4877,7 +4882,7 @@ int32_t QCamera2HardwareInterface::declareSnapshotStreams()
     int rc = NO_ERROR;
 
     // Update stream info configuration
-    rc = mParameters.setStreamConfigure(true, mLongshotEnabled, false);
+    rc = mParameters.setStreamConfigure(true, mLongshotEnabled, false, sessionId);
     if (rc != NO_ERROR) {
         LOGE("setStreamConfigure failed %d", rc);
         return rc;
@@ -8193,7 +8198,7 @@ int32_t QCamera2HardwareInterface::preparePreview()
     int32_t rc = NO_ERROR;
 
     LOGI("E");
-    rc = mParameters.setStreamConfigure(false, false, false);
+    rc = mParameters.setStreamConfigure(false, false, false, sessionId);
     if (rc != NO_ERROR) {
         LOGE("setStreamConfigure failed %d", rc);
         return rc;
