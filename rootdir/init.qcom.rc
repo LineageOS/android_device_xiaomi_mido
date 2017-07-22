@@ -393,6 +393,7 @@ service perfd /system/vendor/bin/perfd
    group root readproc
    disabled
    socket perfd seqpacket 0666 root system
+   writepid /dev/cpuset/system-background/tasks
 
 service iop /system/bin/iop
     class main
@@ -400,6 +401,7 @@ service iop /system/bin/iop
     group root
     disabled
     socket iop seqpacket 0666 root system
+    writepid /dev/cpuset/system-background/tasks
 
 on property:hw.fm.init=*
     write /sys/module/radio_iris_transport/parameters/fmsmd_set ${hw.fm.init}
@@ -423,11 +425,13 @@ on property:persist.env.fastdorm.enabled=true
 service cnd /system/bin/cnd
     class main
     socket cnd stream 660 root inet
+    writepid /dev/cpuset/system-background/tasks
 
 service dpmd /system/bin/dpmd
     class late_start
     socket dpmd stream 660 root system
     group system readproc
+    writepid /dev/cpuset/system-background/tasks
 
 service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class core
@@ -437,10 +441,12 @@ service irsc_util /system/bin/irsc_util "/etc/sec_config"
 service rmt_storage /system/bin/rmt_storage
     class core
     user root
+    writepid /dev/cpuset/system-background/tasks
 
 service tftp_server /system/bin/tftp_server
    class core
    user root
+   writepid /dev/cpuset/system-background/tasks
 
 on property:wc_transport.start_hci=true
     start start_hci_filter
@@ -467,6 +473,7 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
 
 service netmgrd /system/bin/netmgrd
     class main
+    writepid /dev/cpuset/system-background/tasks
 
 service ipacm-diag /system/bin/ipacm-diag
     class main
@@ -478,16 +485,19 @@ service ipacm /system/bin/ipacm
     class main
     user net_admin
     group net_admin inet
+    writepid /dev/cpuset/system-background/tasks
 
 service qti /system/vendor/bin/qti
     class main
     user radio
     group radio net_raw qcom_diag usb net_admin
+    writepid /dev/cpuset/system-background/tasks
 
 service sensors /system/bin/sensors.qcom
     class core
     user root
     group root
+    writepid /dev/cpuset/system-background/tasks
 
 on property:ro.use_data_netmgrd=false
     # netmgr not supported on specific target
@@ -549,6 +559,7 @@ service loc_launcher /system/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
     group gps inet qcom_diag wifi
+    writepid /dev/cpuset/system-background/tasks
 
 service qcom-sh /system/bin/sh /init.qcom.sh
     class late_start
@@ -586,6 +597,7 @@ service charger /charger
     class charger
     group system graphics
     seclabel u:r:healthd:s0
+    writepid /dev/cpuset/system-background/tasks
 
 service qbcharger /charger -m 1
     disabled
@@ -607,21 +619,24 @@ service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
     class late_start
     user system
     group system
+    writepid /dev/cpuset/system-background/tasks
 
 on charger
     setprop persist.sys.usb.config charging
 
 service fingerprintd /system/bin/fingerprintd
     class late_start
-    user system 
+    user system
     group system sdcard_rw
     system system
+    writepid /dev/cpuset/system-background/tasks
     disabled
 
 service gx_fpd /system/bin/gx_fpd
      class core
      user root
      group system system
+     writepid /dev/cpuset/system-background/tasks
 
 on property:sys.fp.vendor=switchf
     stop gx_fpd
