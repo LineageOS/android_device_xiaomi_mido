@@ -118,6 +118,9 @@ TARGET_TAP_TO_WAKE_NODE := "/proc/touchpanel/enable_dt2w"
 # CNE / DPM
 BOARD_USES_QCNE := true
 
+# Cpusets
+ENABLE_CPUSETS := true
+
 # Crypto
 TARGET_HW_DISK_ENCRYPTION := true
 
