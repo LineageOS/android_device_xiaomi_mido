@@ -253,6 +253,18 @@ typedef uint16_t GpsLocationExtendedFlags;
 #define GPS_LOCATION_EXTENDED_HAS_HOR_ELIP_UNC_MINOR 0x0400
 /** GpsLocationExtended has valid Elliptical Horizontal Uncertainty Azimuth */
 #define GPS_LOCATION_EXTENDED_HAS_HOR_ELIP_UNC_AZIMUTH 0x0800
+/** GpsLocationExtended has valid gnss sv used in position data */
+#define GPS_LOCATION_EXTENDED_HAS_GNSS_SV_USED_DATA 0x1000
+
+/** GPS PRN Range */
+#define GPS_SV_PRN_MIN      1
+#define GPS_SV_PRN_MAX      32
+#define GLO_SV_PRN_MIN      65
+#define GLO_SV_PRN_MAX      96
+#define BDS_SV_PRN_MIN      201
+#define BDS_SV_PRN_MAX      235
+#define GAL_SV_PRN_MIN      301
+#define GAL_SV_PRN_MAX      336
 
 typedef enum {
     LOC_RELIABILITY_NOT_SET = 0,
@@ -268,6 +280,13 @@ typedef struct {
     float apTimeStampUncertaintyMs;
     /* timestamp uncertainty in milli seconds */
 }Gnss_ApTimeStampStructType;
+
+typedef struct {
+    uint64_t gps_sv_used_ids_mask;
+    uint64_t glo_sv_used_ids_mask;
+    uint64_t gal_sv_used_ids_mask;
+    uint64_t bds_sv_used_ids_mask;
+} GnssSvUsedInPosition;
 
 /** Represents gps location extended. */
 typedef struct {
@@ -303,6 +322,8 @@ typedef struct {
     float           horUncEllipseOrientAzimuth;
 
     Gnss_ApTimeStampStructType               timeStamp;
+    /** Gnss sv used in position data */
+    GnssSvUsedInPosition gnss_sv_used_ids;
 } GpsLocationExtended;
 
 enum loc_sess_status {

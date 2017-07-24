@@ -290,6 +290,7 @@ LocEngStopFix::LocEngStopFix(LocEngAdapter* adapter) :
 inline void LocEngStopFix::proc() const
 {
     loc_eng_data_s_type* locEng = (loc_eng_data_s_type*)mAdapter->getOwner();
+    mAdapter->clearGnssSvUsedListData();
     loc_eng_stop_handler(*locEng);
 }
 inline void LocEngStopFix::locallog() const
@@ -523,15 +524,15 @@ struct LocEngSuplVer : public LocMsg {
 };
 
 struct LocEngSuplMode : public LocMsg {
-    UlpProxyBase* mUlp;
+    LocEngAdapter* mAdapter;
 
-    inline LocEngSuplMode(UlpProxyBase* ulp) :
-        LocMsg(), mUlp(ulp)
+    inline LocEngSuplMode(LocEngAdapter* adapter) :
+        LocMsg(), mAdapter(adapter)
     {
         locallog();
     }
     inline virtual void proc() const {
-        mUlp->setCapabilities(ContextBase::getCarrierCapabilities());
+        mAdapter->getUlpProxy()->setCapabilities(ContextBase::getCarrierCapabilities());
     }
     inline  void locallog() const {
     }
@@ -806,6 +807,10 @@ void LocEngReportPosition::proc() const {
                         (gps_conf.ACCURACY_THRES != 0) &&
                         (mLocation.gpsLocation.accuracy >
                          gps_conf.ACCURACY_THRES)))) {
+                if (mLocationExtended.flags & GPS_LOCATION_EXTENDED_HAS_GNSS_SV_USED_DATA)
+                {
+                    adapter->setGnssSvUsedListData(mLocationExtended.gnss_sv_used_ids);
+                }
                 locEng->location_cb((UlpLocation*)&(mLocation),
                                     (void*)mLocationExt);
                 reported = true;
@@ -880,14 +885,57 @@ void LocEngReportSv::proc() const {
 
     if (locEng->mute_session_state != LOC_MUTE_SESS_IN_SESSION)
     {
+        GnssSvStatus gnssSvStatus;
+        memcpy(&gnssSvStatus,&mSvStatus,sizeof(GnssSvStatus));
+        if (adapter->isGnssSvIdUsedInPosAvail())
+        {
+            GnssSvUsedInPosition gnssSvIdUsedInPosition =
+                                adapter->getGnssSvUsedListData();
+            int numSv = gnssSvStatus.num_svs;
+            int16_t gnssSvId = 0;
+            uint64_t svUsedIdMask = 0;
+            for (int i=0; i < numSv; i++)
+            {
+                gnssSvId = gnssSvStatus.gnss_sv_list[i].svid;
+                switch(gnssSvStatus.gnss_sv_list[i].constellation) {
+                case GNSS_CONSTELLATION_GPS:
+                    svUsedIdMask = gnssSvIdUsedInPosition.gps_sv_used_ids_mask;
+                    break;
+                case GNSS_CONSTELLATION_GLONASS:
+                    svUsedIdMask = gnssSvIdUsedInPosition.glo_sv_used_ids_mask;
+                    break;
+                case GNSS_CONSTELLATION_BEIDOU:
+                    svUsedIdMask = gnssSvIdUsedInPosition.bds_sv_used_ids_mask;
+                    break;
+                case GNSS_CONSTELLATION_GALILEO:
+                    svUsedIdMask = gnssSvIdUsedInPosition.gal_sv_used_ids_mask;
+                    break;
+                default:
+                    svUsedIdMask = 0;
+                    break;
+                }
+
+                // If SV ID was used in previous position fix, then set USED_IN_FIX
+                // flag, else clear the USED_IN_FIX flag.
+                if (svUsedIdMask & (1 << (gnssSvId - 1)))
+                {
+                    gnssSvStatus.gnss_sv_list[i].flags |= GNSS_SV_FLAGS_USED_IN_FIX;
+                }
+                else
+                {
+                    gnssSvStatus.gnss_sv_list[i].flags &= ~GNSS_SV_FLAGS_USED_IN_FIX;
+                }
+            }
+        }
+
         if (locEng->gnss_sv_status_cb != NULL) {
             LOC_LOGE("Calling gnss_sv_status_cb");
-            locEng->gnss_sv_status_cb((GnssSvStatus*)&(mSvStatus));
+            locEng->gnss_sv_status_cb((GnssSvStatus*)&(gnssSvStatus));
         }
 
         if (locEng->generateNmea)
         {
-            loc_eng_nmea_generate_sv(locEng, mSvStatus, mLocationExtended);
+            loc_eng_nmea_generate_sv(locEng, gnssSvStatus, mLocationExtended);
         }
     }
 }
@@ -2783,7 +2831,7 @@ void loc_eng_configuration_update (loc_eng_data_s_type &loc_eng_data,
                                                             gps_conf.A_GLONASS_POS_PROTOCOL_SELECT));
             }
             if (gps_conf_tmp.SUPL_MODE != gps_conf.SUPL_MODE) {
-                adapter->sendMsg(new LocEngSuplMode(adapter->getUlpProxy()));
+                adapter->sendMsg(new LocEngSuplMode(adapter));
             }
             // we always update lock mask, this is because if this is dsds device, we would not
             // know if modem has switched dds, if so, lock mask may also need to be updated.
