@@ -79,7 +79,9 @@ class LocEngAdapter : public LocAdapterBase {
     unsigned int mPowerVote;
     static const unsigned int POWER_VOTE_RIGHT = 0x20;
     static const unsigned int POWER_VOTE_VALUE = 0x10;
-
+    /** Gnss sv used in position data */
+    GnssSvUsedInPosition mGnssSvIdUsedInPosition;
+    bool mGnssSvIdUsedInPosAvail;
 public:
     bool mSupportsAgpsRequests;
     bool mSupportsPositionInjection;
@@ -109,6 +111,25 @@ public:
         return mContext->hasNativeXtraClient();
     }
     inline const MsgTask* getMsgTask() { return mMsgTask; }
+
+    inline void clearGnssSvUsedListData() {
+        mGnssSvIdUsedInPosAvail = false;
+        memset(&mGnssSvIdUsedInPosition, 0, sizeof (GnssSvUsedInPosition));
+    }
+
+    inline void setGnssSvUsedListData(GnssSvUsedInPosition gnssSvUsedIds) {
+        mGnssSvIdUsedInPosAvail = true;
+        memcpy(&mGnssSvIdUsedInPosition, &gnssSvUsedIds,
+                                    sizeof(GnssSvUsedInPosition));
+    }
+
+    inline GnssSvUsedInPosition getGnssSvUsedListData() {
+        return mGnssSvIdUsedInPosition;
+    }
+
+    inline bool isGnssSvIdUsedInPosAvail() {
+        return mGnssSvIdUsedInPosAvail;
+    }
 
     inline enum loc_api_adapter_err
         startFix()
