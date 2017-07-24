@@ -55,9 +55,10 @@ camera.lowpower.record.enable=1
 persist.camera.gyro.disable=0
 camera.hal1.packagelist=com.skype.raider,com.google.android.talk
 
-# Cne
+# Cne/Dpm
 persist.cne.feature=1
 persist.dpm.feature=1
+persist.dpm.nsrm.bkg.evt=3955
 
 # Coresight
 persist.debug.coresight.config=stm-events
