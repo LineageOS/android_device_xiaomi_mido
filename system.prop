@@ -53,7 +53,7 @@ persist.camera.feature.cac=1
 persist.camera.imglib.cac3=2
 camera.lowpower.record.enable=1
 persist.camera.gyro.disable=0
-camera.hal1.packagelist=com.skype.raider,com.google.android.talk
+camera.hal1.packagelist=com.skype.raider,com.google.android.talk,org.cyanogenmod.snap
 
 # Cne
 persist.cne.feature=1
