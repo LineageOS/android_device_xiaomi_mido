@@ -278,6 +278,9 @@
          provisioning, availability etc -->
     <bool name="config_carrier_volte_available">true</bool>
 
+    <!-- Flag specifying whether VT is available on device -->
+    <bool name="config_device_vt_available">true</bool>
+
     <!-- Config determines whether to update phone object when voice registration
          state changes. Voice radio tech change will always trigger an update of
          phone object irrespective of this config -->
