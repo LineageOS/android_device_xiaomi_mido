@@ -189,3 +189,6 @@ wifi.interface=wlan0
 
 #Legend Version
 ro.legendrom.version=18.0
+
+#Background apps more running
+ro.sys.fw.bg_apps_limit=27
