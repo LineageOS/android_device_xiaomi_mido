@@ -274,3 +274,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
       persist.ota.romname=LegendROM \
       persist.ota.version=20170812 \
       persist.ota.manifest=https://raw.githubusercontent.com/LegendROM-N/android_extras_ota/cm-14.1/mido.xml
+
+# USB
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.isUsbOtgEnabled=true \
+    persist.sys.usb.config=mtp
