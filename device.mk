@@ -272,7 +272,7 @@ PRODUCT_COPY_FILES += \
 # OTA
 PRODUCT_PROPERTY_OVERRIDES += \
       persist.ota.romname=LegendROM \
-      persist.ota.version=20170813 \
+      persist.ota.version=20170816 \
       persist.ota.manifest=https://raw.githubusercontent.com/LegendROM-N/android_extras_ota/cm-14.1/mido.xml
 
 # USB
