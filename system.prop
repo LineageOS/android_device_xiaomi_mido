@@ -158,6 +158,7 @@ persist.dbg.ims_volte_enable=1
 persist.dbg.volte_avail_ovr=1
 persist.dbg.vt_avail_ovr=1
 persist.radio.videopause.mode=1
+persist.radio.aosp_usr_pref_sel=true
 persist.data.iwlan.enable=true
 persist.dbg.wfc_avail_ovr=0
 persist.radio.sw_mbn_update=0

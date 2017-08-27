@@ -378,6 +378,7 @@ vendor/lib64/libqmiservices.so
 vendor/lib64/libsmemlog.so
 
 # Radio
+-app/SimSettings/SimSettings.apk
 -app/QtiTelephonyService/QtiTelephonyService.apk
 etc/permissions/qcnvitems.xml
 etc/permissions/qcrilhook.xml
@@ -386,7 +387,7 @@ etc/permissions/telephonyservice.xml
 -framework/qcnvitems.jar
 -framework/qcrilhook.jar
 -framework/qti-telephony-common.jar
-framework/telephony-ext.jar
+-framework/telephony-ext.jar
 lib64/libparam.so
 -priv-app/qcrilmsgtunnel/qcrilmsgtunnel.apk
 vendor/bin/hw/rild
