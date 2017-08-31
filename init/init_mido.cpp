@@ -123,7 +123,7 @@ void vendor_load_properties()
     property_set("ro.hwui.path_cache_size", "32");
     property_set("ro.hwui.gradient_cache_size", "1");
     property_set("ro.hwui.drop_shadow_cache_size", "6");
-    property_set("o.hwui.texture_cache_flushrate", "0.4");
+    property_set("ro.hwui.texture_cache_flushrate", "0.4");
     property_set("ro.hwui.text_small_cache_width", "1024");
     property_set("ro.hwui.text_small_cache_height", "1024");
     property_set("ro.hwui.text_large_cache_width", "2048");
