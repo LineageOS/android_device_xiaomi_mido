@@ -90,6 +90,9 @@
 
     <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
     <bool name="config_unplugTurnsOnScreen">true</bool>
+    
+    <!-- Light up hardware keys only when pressed -->
+    <bool name="config_buttonLightOnKeypressOnly">true</bool>
 
     <!-- Set to true to add links to Cell Broadcast app from Settings and MMS app. -->
     <bool name="config_cellBroadcastAppLinks">true</bool>
