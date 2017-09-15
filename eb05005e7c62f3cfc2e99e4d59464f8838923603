@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dcf6051_3408b1b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 16082
+      },
+      "writtenOn": "2017-09-15T10:52:27Z",
+      "side": 1,
+      "message": "This does not belong in a commit subject. Set the author to the person who wrote the changes instead",
+      "revId": "eb05005e7c62f3cfc2e99e4d59464f8838923603",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
