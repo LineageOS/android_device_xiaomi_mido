@@ -188,7 +188,5 @@ ro.sys.fw.trim_enable_memory=2147483648
 wifi.interface=wlan0
 
 #Legend Version
-ro.legendrom.version=18.0
+ro.legendrom.version=19.0
 
-#Background apps more running
-ro.sys.fw.bg_apps_limit=27
