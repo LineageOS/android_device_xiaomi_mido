@@ -1135,11 +1135,11 @@ vendor/lib64/libsensor_reg.so
 vendor/lib64/sensor_calibrate.so
 vendor/lib64/sensors.ssc.so
 
-# Thermal
-vendor/bin/thermal-engine
-vendor/lib/libthermalclient.so
-vendor/lib64/libthermalclient.so
-vendor/lib64/libthermalioctl.so
+# Thermal - from stock
+vendor/bin/thermal-engine|6e354128853c34d757737586acd90550ee20d666
+vendor/lib/libthermalclient.so|78d068404db11533951308c58272d43a787d7e16
+vendor/lib64/libthermalclient.so|ead967ce93d379f673295b513ed9ef30f889e002
+vendor/lib64/libthermalioctl.so|ef41f69153713fce491af3e00db8c6f8dadfde00
 
 # Time services
 -app/TimeService/TimeService.apk
