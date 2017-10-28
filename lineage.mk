@@ -22,6 +22,8 @@ $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 PRODUCT_NAME := lineage_mido
 BOARD_VENDOR := Xiaomi
 
+I_WANT_A_QUAIL_STAR=true
+
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
