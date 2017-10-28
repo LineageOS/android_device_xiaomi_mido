@@ -62,7 +62,7 @@ on boot
     mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
     write /sys/class/android_usb/android0/f_ffs/aliases adb
 
-service qcom-usb-sh /system/bin/sh /init.qcom.usb.sh
+service qcom-usb-sh /system/bin/sh /vendor/bin/init.qcom.usb.sh
     class core
     user root
     oneshot
