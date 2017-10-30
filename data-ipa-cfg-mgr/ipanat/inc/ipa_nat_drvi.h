@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2013, The Linux Foundation. All rights reserved.
+Copyright (c) 2013 - 2017, The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -215,8 +215,8 @@ typedef struct {
   | Proto   |      TimeStamp(3B)        |       Flags(2B)     | IP check sum Diff(2B)|
   | (1B)    |                           |EN|FIN|Resv |        |                      |
   -----------------------------------------------------------------------------------
-  | TCP/UDP checksum |  Reserved(2B)    |    SW Specific Parameters(4B)              |
-  |    diff (2B)                        |                                            |
+  | TCP/UDP checksum |PDN info| Reserved|    SW Specific Parameters(4B)              |
+  |    diff (2B)     |  (1B)  |   (1B)  |                                            |
   -----------------------------------------------------------------------------------
 
   Dont change below structure definition.
@@ -240,11 +240,23 @@ struct ipa_nat_rule {
    ------------------------------------
    |  index table    |  prev index    |
    |     entry       |                |
-	 ------------------------------------
+   ------------------------------------
   --------------------------------------------------*/
 	uint64_t sw_spec_params:32;
 
-	uint64_t rsvd2:16;
+	uint64_t rsvd2:8;
+
+  /*-----------------------------------------
+   8 bit PDN info is interpreted as following
+   ------------------------------------
+   |     4 bits      |     4 bits     |
+   ------------------------------------
+   |  PDN index      |    reserved    |
+   |                 |                |
+   ------------------------------------
+  -------------------------------------------*/
+	uint64_t rsvd3:4;
+	uint64_t pdn_index:4;
 	uint64_t tcp_udp_chksum:16;
 };
 
@@ -275,7 +287,18 @@ struct ipa_nat_sw_rule {
   --------------------------------------------------*/
 	uint64_t prev_index:16;
 	uint64_t indx_tbl_entry:16;
-	uint64_t rsvd2:16;
+	uint64_t rsvd2 :8;
+  /*-----------------------------------------
+   8 bit PDN info is interpreted as following
+   ------------------------------------
+   |     4 bits      |     4 bits     |
+   ------------------------------------
+   |  PDN index      |    reserved    |
+   |                 |                |
+   ------------------------------------
+  -------------------------------------------*/
+	uint64_t rsvd3 :4;
+	uint64_t pdn_index :4;
 	uint64_t tcp_udp_chksum:16;
 };
 #define IPA_NAT_TABLE_ENTRY_SIZE        32
@@ -326,6 +349,7 @@ struct ipa_nat_cache {
 	struct ipa_nat_ip4_table_cache ip4_tbl[IPA_NAT_MAX_IP4_TBLS];
 	int ipa_fd;
 	uint8_t table_cnt;
+	enum ipa_hw_type ver;
 };
 
 struct ipa_nat_indx_tbl_sw_rule {
@@ -401,6 +425,8 @@ int ipa_nati_post_ipv4_init_cmd(uint8_t tbl_index);
 int ipa_nati_query_timestamp(uint32_t  tbl_hdl,
 				uint32_t  rule_hdl,
 				uint32_t  *time_stamp);
+
+int ipa_nati_modify_pdn(struct ipa_ioc_nat_pdn_entry *entry);
 
 int ipa_nati_add_ipv4_rule(uint32_t tbl_hdl,
 				const ipa_nat_ipv4_rule *clnt_rule,
