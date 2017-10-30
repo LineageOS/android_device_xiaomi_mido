@@ -1,11 +1,10 @@
-ifneq ($(BUILD_TINY_ANDROID),true)
-
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libloc_api_v02
-
+LOCAL_MODULE_PATH_32 := $(TARGET_OUT_VENDOR)/lib
+LOCAL_MODULE_PATH_64 := $(TARGET_OUT_VENDOR)/lib64
 LOCAL_MODULE_TAGS := optional
 
 ifeq ($(TARGET_DEVICE),apq8026_lw)
@@ -22,6 +21,7 @@ LOCAL_SHARED_LIBRARIES := \
     libloc_core \
     libgps.utils \
     libdl \
+    liblog \
     libloc_pla
 
 LOCAL_SRC_FILES = \
@@ -35,28 +35,20 @@ LOCAL_CFLAGS += \
     -fno-short-enums \
     -D_ANDROID_
 
-LOCAL_COPY_HEADERS_TO:= libloc_api_v02/
-
-LOCAL_COPY_HEADERS:= \
-    location_service_v02.h \
-    loc_api_v02_log.h \
-    loc_api_v02_client.h \
-    loc_api_sync_req.h \
-    LocApiV02.h \
-    loc_util_log.h
-
-
 ## Includes
 LOCAL_C_INCLUDES := \
-    $(TARGET_OUT_HEADERS)/libloc_core \
     $(TARGET_OUT_HEADERS)/qmi-framework/inc \
-    $(TARGET_OUT_HEADERS)/qmi/inc \
-    $(TARGET_OUT_HEADERS)/gps.utils \
-    $(TARGET_OUT_HEADERS)/libloc_ds_api \
-    $(TARGET_OUT_HEADERS)/libloc_pla
-
-LOCAL_PRELINK_MODULE := false
-
+    $(TARGET_OUT_HEADERS)/qmi/inc
+LOCAL_HEADER_LIBRARIES := \
+    libloc_core_headers \
+    libgps.utils_headers \
+    libloc_ds_api_headers \
+    libloc_pla_headers \
+    liblocation_api_headers
+LOCAL_CFLAGS += $(GNSS_CFLAGS)
 include $(BUILD_SHARED_LIBRARY)
 
-endif # not BUILD_TINY_ANDROID
+include $(CLEAR_VARS)
+LOCAL_MODULE := libloc_api_v02_headers
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
+include $(BUILD_HEADER_LIBRARY)

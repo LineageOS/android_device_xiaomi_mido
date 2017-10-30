@@ -29,6 +29,8 @@
 #ifndef _DS_CLIENT_H_
 #define _DS_CLIENT_H_
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -154,7 +156,7 @@ typedef struct {
  * @retval E_DS_CLIENT_SUCCESS    On success.
  * @retval E_DS_CLIENT_FAILURE... On error.
  */
-typedef ds_client_status_enum_type ds_client_init_type();
+typedef ds_client_status_enum_type ds_client_init_type(bool is_ssr);
 
 /**
  * @brief Prepares for call.
@@ -238,6 +240,20 @@ typedef void ds_client_close_call_type
 );
 
 /**
+ * @brief Releases the DS client service
+ *
+ * This function is to be called as a last step by each process that
+ * use data services to release DS interface. This call internally calls
+ * dsi_release() and prepares the shutdown of module.
+ * Needs to be called once after data call is done to release DS interface.
+ *
+ * @return Operation result
+ * @retval E_DS_CLIENT_SUCCESS    On success.
+ * @retval E_DS_CLIENT_FAILURE... On error.
+ */
+typedef ds_client_status_enum_type ds_client_release_type();
+
+/**
  * @brief DS client functional interface table
  *
  * This table contains all supported DS client operations. If the operation
@@ -252,6 +268,7 @@ typedef struct
   ds_client_start_call_type *pfn_start_call;
   ds_client_stop_call_type  *pfn_stop_call;
   ds_client_close_call_type *pfn_close_call;
+  ds_client_release_type    *pfn_release;
 } ds_client_iface_type;
 
 /**
