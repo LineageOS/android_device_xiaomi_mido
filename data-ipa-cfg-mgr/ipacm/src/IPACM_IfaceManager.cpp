@@ -267,6 +267,10 @@ int IPACM_IfaceManager::create_iface_instance(ipacm_ifacemgr_data *param)
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_UP_V6_TETHER, lan);
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_DOWN_TETHER, lan);
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_DOWN_V6_TETHER, lan);
+#ifdef FEATURE_IPACM_HAL
+				IPACM_EvtDispatcher::registr(IPA_DOWNSTREAM_ADD, lan);
+				IPACM_EvtDispatcher::registr(IPA_DOWNSTREAM_DEL, lan);
+#endif
 #else
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_UP, lan);
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_UP_V6, lan);
@@ -374,6 +378,10 @@ int IPACM_IfaceManager::create_iface_instance(ipacm_ifacemgr_data *param)
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_UP_V6_TETHER, wl);
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_DOWN_TETHER, wl);
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_DOWN_V6_TETHER, wl);
+#ifdef FEATURE_IPACM_HAL
+				IPACM_EvtDispatcher::registr(IPA_DOWNSTREAM_ADD, wl);
+				IPACM_EvtDispatcher::registr(IPA_DOWNSTREAM_DEL, wl);
+#endif
 #else
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_UP, wl);
 				IPACM_EvtDispatcher::registr(IPA_HANDLE_WAN_UP_V6, wl);

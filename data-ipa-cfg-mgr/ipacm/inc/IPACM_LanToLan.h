@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014, The Linux Foundation. All rights reserved.
+Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -53,10 +53,45 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MAX_NUM_IFACE 10
 #define MAX_NUM_CLIENT 16
 
+struct vlan_iface_info
+{
+	char vlan_iface_name[IPA_RESOURCE_NAME_MAX];
+	uint8_t vlan_id;
+	uint32_t vlan_iface_ipv6_addr[4];
+	uint8_t vlan_client_mac[6];
+	uint32_t vlan_client_ipv6_addr[4];
+};
+
+struct l2tp_vlan_mapping_info
+{
+	/* the following are l2tp iface info (name, session id) */
+	char l2tp_iface_name[IPA_RESOURCE_NAME_MAX];
+	uint8_t l2tp_session_id;
+	/* the following are mdm vlan iface info (name, vlan id, ipv6 addr) */
+	char vlan_iface_name[IPA_RESOURCE_NAME_MAX];
+	uint8_t vlan_id;
+	uint32_t vlan_iface_ipv6_addr[4];
+	/* the following are MIB3 vlan client info (mac, ipv6 addr) */
+	uint8_t vlan_client_mac[6];
+	uint32_t vlan_client_ipv6_addr[4];
+	/* the following is MIB3 l2tp client info (mac) */
+	uint8_t l2tp_client_mac[6];
+};
+
 struct rt_rule_info
 {
 	int num_hdl[IPA_IP_MAX];	/* one client may need more than one routing rules on the same routing table depending on tx_prop */
 	uint32_t  rule_hdl[IPA_IP_MAX][MAX_NUM_PROP];
+};
+
+struct l2tp_rt_rule_info
+{
+	uint32_t first_pass_hdr_hdl;	/* first pass hdr template (IPv4 and IPv6 use the same hdr template) */
+	uint32_t first_pass_hdr_proc_ctx_hdl[IPA_IP_MAX]; /* first pass hdr proc ctx */
+	uint32_t second_pass_hdr_hdl;	/* second pass hdr template (IPv4 and IPv6 use the same hdr template) */
+	int num_rt_hdl[IPA_IP_MAX];		/* number of TX properties for IPv4 and IPv6 respectively */
+	uint32_t  first_pass_rt_rule_hdl[IPA_IP_MAX][MAX_NUM_PROP];	/* first pass routing rule */
+	uint32_t  second_pass_rt_rule_hdl[MAX_NUM_PROP];	/*second pass routing rule (only ipv6 rt rule is needed) */
 };
 
 struct client_info
@@ -64,12 +99,17 @@ struct client_info
 	uint8_t mac_addr[6];
 	rt_rule_info inter_iface_rt_rule_hdl[IPA_HDR_L2_MAX];	/* routing rule handles of inter interface communication based on source l2 header type */
 	rt_rule_info intra_iface_rt_rule_hdl;	/* routing rule handles of inter interface communication */
+	bool is_l2tp_client;
+	l2tp_vlan_mapping_info *mapping_info;
+	l2tp_rt_rule_info l2tp_rt_rule_hdl[IPA_HDR_L2_MAX];
 };
 
 struct flt_rule_info
 {
 	client_info *p_client;
 	uint32_t flt_rule_hdl[IPA_IP_MAX];
+	uint32_t l2tp_first_pass_flt_rule_hdl[IPA_IP_MAX];	/* L2TP filtering rules are destination MAC based */
+	uint32_t l2tp_second_pass_flt_rule_hdl;
 };
 
 struct peer_iface_info
@@ -101,7 +141,7 @@ public:
 	void handle_new_iface_up(char rt_tbl_name_for_flt[][IPA_RESOURCE_NAME_MAX], char rt_tbl_name_for_rt[][IPA_RESOURCE_NAME_MAX],
 		IPACM_LanToLan_Iface *peer_iface);
 
-	void handle_client_add(uint8_t *mac);
+	void handle_client_add(uint8_t *mac, bool is_l2tp_client, l2tp_vlan_mapping_info *mapping_info);
 
 	void handle_client_del(uint8_t *mac);
 
@@ -121,16 +161,28 @@ public:
 
 	void decrement_ref_cnt_peer_l2_hdr_type(ipa_hdr_l2_type peer_l2_type);
 
+	void switch_to_l2tp_iface();
+
+	bool set_l2tp_iface(char *vlan_iface_name);
+
+	bool is_l2tp_iface();
+
+	void handle_l2tp_enable();
+
+	void handle_l2tp_disable();
+
 private:
 
 	IPACM_Lan *m_p_iface;
 	bool m_is_ip_addr_assigned[IPA_IP_MAX];
 	bool m_support_inter_iface_offload;
 	bool m_support_intra_iface_offload;
+	bool m_is_l2tp_iface;
 
 	int ref_cnt_peer_l2_hdr_type[IPA_HDR_L2_MAX];	/* reference count of l2 header type of peer interfaces */
 	uint32_t hdr_proc_ctx_for_inter_interface[IPA_HDR_L2_MAX];
 	uint32_t hdr_proc_ctx_for_intra_interface;
+	uint32_t hdr_proc_ctx_for_l2tp;		/* uc needs to remove 62 bytes IPv6 + L2TP + inner Ethernet header */
 
 	list<client_info> m_client_info;	/* client list */
 	list<peer_iface_info> m_peer_iface_info;	/* peer information list */
@@ -150,6 +202,8 @@ private:
 
 	void del_client_rt_rule(peer_iface_info *peer, client_info *client);
 
+	void add_l2tp_client_rt_rule(peer_iface_info *peer, client_info *client);
+
 	void clear_all_flt_rule_for_one_peer_iface(peer_iface_info *peer);
 
 	void clear_all_rt_rule_for_one_peer_iface(peer_iface_info *peer);
@@ -167,15 +221,25 @@ class IPACM_LanToLan : public IPACM_Listener
 
 public:
 
-	IPACM_LanToLan();
+	static IPACM_LanToLan* p_instance;
+	static IPACM_LanToLan* get_instance();
+	bool has_l2tp_iface();
 
 private:
 
+	IPACM_LanToLan();
+
 	~IPACM_LanToLan();
+
+	bool m_has_l2tp_iface;
 
 	list<class IPACM_LanToLan_Iface> m_iface;
 
 	list<ipacm_event_eth_bridge> m_cached_client_add_event;
+
+	list<vlan_iface_info> m_vlan_iface;
+
+	list<l2tp_vlan_mapping_info> m_l2tp_vlan_mapping;
 
 	void handle_iface_up(ipacm_event_eth_bridge *data);
 
@@ -186,6 +250,18 @@ private:
 	void handle_client_del(ipacm_event_eth_bridge *data);
 
 	void handle_wlan_scc_mcc_switch(ipacm_event_eth_bridge *data);
+
+	void handle_add_vlan_iface(ipa_ioc_vlan_iface_info *data);
+
+	void handle_del_vlan_iface(ipa_ioc_vlan_iface_info *data);
+
+	void handle_add_l2tp_vlan_mapping(ipa_ioc_l2tp_vlan_mapping_info *data);
+
+	void handle_del_l2tp_vlan_mapping(ipa_ioc_l2tp_vlan_mapping_info *data);
+
+	void handle_vlan_client_info(ipacm_event_data_all *data);
+
+	void handle_vlan_iface_info(ipacm_event_data_all *data);
 
 	void handle_new_iface_up(IPACM_LanToLan_Iface *new_iface, IPACM_LanToLan_Iface *exist_iface);
 
