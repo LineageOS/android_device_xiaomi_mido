@@ -43,10 +43,8 @@ setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT"
 write_headers
 
 write_makefiles "$MY_DIR"/proprietary-files.txt
-
-cat << EOF >> "$ANDROIDMK"
-
-EOF
+echo "" >> "$PRODUCTMK"
+write_makefiles "$MY_DIR"/proprietary-files-qc.txt
 
 # Finish
 write_footers
