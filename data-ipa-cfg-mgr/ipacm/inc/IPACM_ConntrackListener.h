@@ -87,7 +87,6 @@ private:
 	void TriggerWANUp(void *);
 	void TriggerWANDown(uint32_t);
 	int  CreateNatThreads(void);
-	int  CreateConnTrackThreads(void);
 	bool AddIface(nat_table_entry *, bool *);
 	void AddORDeleteNatEntry(const nat_entry_bundle *);
 	void PopulateTCPorUDPEntry(struct nf_conntrack *, uint32_t, nat_table_entry *);
@@ -116,6 +115,7 @@ public:
 	void HandleNeighIpAddrDelEvt(uint32_t);
 	void HandleSTAClientAddEvt(uint32_t);
 	void HandleSTAClientDelEvt(uint32_t);
+	int  CreateConnTrackThreads(void);
 };
 
 extern IPACM_ConntrackListener *CtList;

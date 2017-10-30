@@ -91,6 +91,13 @@ public:
 
    static IPACM_ConntrackClient* GetInstance();
 
+   static void UNRegisterWithConnTrack(void);
+   int fd_tcp;
+   int fd_udp;
+
+   unsigned int subscrips_tcp;
+   unsigned int subscrips_udp;
+
 #ifdef IPACM_DEBUG
 #define iptodot(X,Y) \
 		 IPACMLOG(" %s(0x%x): %d.%d.%d.%d\n", X, Y, ((Y>>24) & 0xFF), ((Y>>16) & 0xFF), ((Y>>8) & 0xFF), (Y & 0xFF));
