@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+ifneq ($(BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE),)
 LOCAL_PATH := $(call my-dir)
 
 include $(call all-subdir-makefiles,$(LOCAL_PATH))
+endif # BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE
