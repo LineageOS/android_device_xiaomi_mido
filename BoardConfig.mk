@@ -168,7 +168,7 @@ USE_DEVICE_SPECIFIC_GPS := true
 TARGET_NO_RPC := true
 
 # Filesystem
-TARGET_ANDROID_FILESYSTEM_CONFIG_H := $(DEVICE_PATH)/android_filesystem_config.h
+TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_mido
