@@ -40,24 +40,55 @@ typedef void (*locationUpdateCb)(UlpLocation *location,
                                  GpsLocationExtended *locExtended,
                                  void* clientData);
 
-/* registers a client callback for listening to location updates
-   locationCb - location callback function pointer implemented by client
+typedef void (*svRptUpdateCb)(GnssSvNotification *svNotify,
+                                 void* clientData);
+
+typedef void (*nmeaUpdateCb)(UlpNmea *nmea,  void* clientData);
+
+typedef struct {
+
+    locationUpdateCb    locCb;
+    svRptUpdateCb       svReportCb;
+    nmeaUpdateCb        nmeaCb;
+
+}remoteClientInfo;
+/* registers a client callback structure for listening to final location updates
+    pClientInfo - pointer to remoteClientInfo structure
                 Can not be NULL.
    clientData - an opaque data pointer from client. This pointer will be
-                provided back when the locationCb() callbacak is called.
+                provided back when the callbacak is called.
                 This can be used by client to store application context
                 or statemachine etc.
                 Can be NULL.
    return: an opaque pointer that serves as a request handle. This handle
-           is to be fed to theunregisterLocationUpdater() call.
+           to be fed to the unregisterLocationUpdater() call.
 */
-void* registerLocationUpdater(locationUpdateCb locationCb, void* clientData);
+void* registerLocationUpdater(remoteClientInfo *pClientInfo, void* clientData);
 
 /* unregisters the client callback
    locationUpdaterHandle - the opaque pointer from the return of
                            registerLocationUpdater()
 */
 void unregisterLocationUpdater(void* locationUpdaterHandle);
+
+/* registers a client callback structure for listening to raw location updates
+    pClientInfo - pointer to remoteClientInfo structure
+                Can not be NULL.
+   clientData - an opaque data pointer from client. This pointer will be
+                provided back when the callback is called.
+                This can be used by client to store application context
+                or statemachine etc.
+                Can be NULL.
+   return: an opaque pointer that serves as a request handle. This handle
+           to be fed to the unregisterRawLocationUpdater() call.
+*/
+void* registerRawLocationUpdater(remoteClientInfo *pClientInfo, void* clientData);
+
+/* unregisters the client callback
+   locationUpdaterHandle - the opaque pointer from the return of
+                           registerRawLocationUpdater()
+*/
+void unregisterRawLocationUpdater(void* locationUpdaterHandle);
 
 typedef void (*errReportCb)(const char* errStr, void* clientData);
 typedef void (*sstpSiteUpdateCb)(const char* name, double lat, double lon,
@@ -96,7 +127,6 @@ void unregisterSstpUpdater(void* sstpUpdaterHandle);
                            registerLocationUpdater()
 */
 void stopSstpUpdate(void* sstpUpdaterHandle);
-
 
 #ifdef __cplusplus
 } // extern "C"
