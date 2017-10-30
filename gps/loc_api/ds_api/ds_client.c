@@ -794,16 +794,41 @@ err:
  * @retval E_DS_CLIENT_SUCCESS    On success.
  * @retval E_DS_CLIENT_FAILURE... On error.
  */
-static ds_client_status_enum_type ds_client_init()
+static ds_client_status_enum_type ds_client_init(bool is_ssr)
 {
   ds_client_status_enum_type ret = E_DS_CLIENT_SUCCESS;
-  LOC_LOGD("%s:%d]:Enter", __func__, __LINE__);
-  if(DSI_SUCCESS != dsi_init(DSI_MODE_GENERAL))
+  int dsi_mode = (is_ssr)?DSI_MODE_SSR:DSI_MODE_GENERAL;
+  if(DSI_SUCCESS != dsi_init(dsi_mode))
   {
-    LOC_LOGE("%s:%d]:dsi_init failed", __func__, __LINE__);
     ret = E_DS_CLIENT_FAILURE_GENERAL;
   }
-  LOC_LOGD("%s:%d]:Exit", __func__, __LINE__);
+  LOC_LOGD("%s:%d]: is_ssr:%d dsi_mode:%d ret_status:%d",
+                                        __func__, __LINE__,
+                                        is_ssr, dsi_mode, ret);
+  return ret;
+}
+
+/**
+ * @brief Releases the DS client service
+ *
+ * This function is to be called as a last step by each process that
+ * use data services to release DS interface. This call internally calls
+ * dsi_release() and prepares the shutdown of module.
+ * Needs to be called once after data call is done to release DS interface.
+ *
+ * @return Operation result
+ * @retval E_DS_CLIENT_SUCCESS    On success.
+ * @retval E_DS_CLIENT_FAILURE... On error.
+ */
+static ds_client_status_enum_type ds_client_release()
+{
+  ds_client_status_enum_type ret = E_DS_CLIENT_SUCCESS;
+
+  if(DSI_SUCCESS != dsi_release(DSI_MODE_GENERAL))
+  {
+    ret = E_DS_CLIENT_FAILURE_GENERAL;
+  }
+  LOC_LOGD("%s:%d]: ret status: %d", __func__, __LINE__, ret);
   return ret;
 }
 
@@ -816,7 +841,8 @@ static const ds_client_iface_type iface =
   .pfn_open_call  = ds_client_open_call,
   .pfn_start_call = ds_client_start_call,
   .pfn_stop_call  = ds_client_stop_call,
-  .pfn_close_call = ds_client_close_call
+  .pfn_close_call = ds_client_close_call,
+  .pfn_release    = ds_client_release
 };
 
 /**
