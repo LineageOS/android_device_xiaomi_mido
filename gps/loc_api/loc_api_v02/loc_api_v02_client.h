@@ -724,6 +724,18 @@ typedef union
 
     const qmiLocInjectXtraPcidReqMsgT_v02 *pInjectXtraPcidReq;
     /*QMI_LOC_INJECT_XTRA_PCID_REQ_V02*/
+
+    const qmiLocInjectSrnApDataReqMsgT_v02 *pInjectSrnApDataReq;
+    /*QMI_LOC_INJECT_SRN_AP_DATA_REQ_V02*/
+
+    const qmiLocQueryXtraInfoReqMsgT_v02   *pQueryXtraInfoReq;
+
+    /*QMI_LOC_QUERY_XTRA_INFO_REQ_V02*/
+    const qmiLocStartOutdoorTripBatchingReqMsgT_v02 *pStartOutdoorTripBatchingReq;
+    /*QMI_LOC_START_OUTDOOR_TRIP_BATCHING_REQ_V02*/
+
+    const qmiLocQueryOTBAccumulatedDistanceReqMsgT_v02 *pQueryOTBAccumulatedDistanceReq;
+    /*QMI_LOC_QUERY_OTB_ACCUMULATED_DISTANCE_REQ_V02*/
 }locClientReqUnionType;
 
 
@@ -986,6 +998,10 @@ typedef union
         end event.
         QMI_LOC_EVENT_GDT_DOWNLOAD_END_REQ_IND_V02. */
 
+   const qmiLocEventInjectSrnApDataReqIndMsgT_v02 *pInjectSrnApDataReqEvent;
+   /**< Sent by the engine to notify the client about a SRN Ap data
+        request.
+        QMI_LOC_EVENT_INJECT_SRN_AP_DATA_REQ_IND_V02. */
 }locClientEventIndUnionType;
 
 
@@ -1439,6 +1455,15 @@ typedef union
 
     const qmiLocDeleteGNSSServiceDataIndMsgT_v02 *pDeleteGNSSServiceDataInd;
     /* QMI_LOC_DELETE_GNSS_SERVICE_DATA_REQ_V02*/
+
+    const qmiLocInjectSrnApDataIndMsgT_v02 *pInjectSrnApDataInd;
+    /*QMI_LOC_INJECT_SRN_AP_DATA_IND_V02*/
+
+    const qmiLocStartOutdoorTripBatchingIndMsgT_v02 *pStartOutdoorTripBatchingInd;
+    /*QMI_LOC_START_OUTDOOR_TRIP_BATCHING_IND_V02*/
+
+    const qmiLocQueryOTBAccumulatedDistanceIndMsgT_v02 *pQueryOTBAccumulatedDistanceInd;
+    /*QMI_LOC_QUERY_OTB_ACCUMULATED_DISTANCE_IND_V02*/
 }locClientRespIndUnionType;
 
 /** @} */ /* end_addtogroup data_types */
