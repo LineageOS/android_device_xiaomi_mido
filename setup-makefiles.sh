@@ -44,6 +44,7 @@ write_headers
 
 # The standard blobs
 write_makefiles "$MY_DIR"/proprietary-files.txt
+write_makefiles "$MY_DIR"/proprietary-files-qc.txt
 
 cat << EOF >> "$ANDROIDMK"
 
