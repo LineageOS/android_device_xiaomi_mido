@@ -113,6 +113,7 @@ vendor.vidc.dec.downscalar_width=1920
 vendor.vidc.dec.downscalar_height=1088
 vendor.vidc.disable.split.mode=1
 vendor.vidc.enc.disable.pq=true
+persist.media.treble_omx=false
 
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so
