@@ -25,6 +25,7 @@
 // skips conn update at conn completion
 #define BTA_BLE_SKIP_CONN_UPD  FALSE
 #define BLE_PERIPHERAL_ADV_NAME  FALSE
+#define BTM_LE_SECURE_CONN  TRUE
 #define BT_CLEAN_TURN_ON_DISABLED 1
 
 #define BTA_DISABLE_DELAY 1000 /* in milliseconds */
