@@ -35,6 +35,7 @@
 // System dependencies
 #include <fcntl.h>
 #include <stdio.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include "hardware/gralloc.h"
 #include <utils/Timers.h>
