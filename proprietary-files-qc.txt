@@ -547,7 +547,6 @@ vendor/lib64/libthermalioctl.so
 # Time services
 -vendor/app/TimeService/TimeService.apk
 vendor/bin/time_daemon
--vendor/lib/libtime_genoff.so
 -vendor/lib64/libtime_genoff.so
 
 # Widevine
