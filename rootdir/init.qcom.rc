@@ -626,9 +626,11 @@ on property:sys.fp.vendor=switchf
     setprop fpc.fp.miui.token 0
     setprop ro.boot.fpsensor fpc
     setprop ro.hardware.fingerprint searchf
+    start fps_hal
 
 on property:sys.fp.onstart=1
    setprop goodix.fp.miui.analyse 1
    setprop goodix.fp.miui.token 0
    setprop ro.boot.fpsensor gdx
    setprop ro.hardware.fingerprint goodix
+   start fps_hal
