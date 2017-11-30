@@ -410,7 +410,7 @@ static void mm_app_zsl_notify_cb(mm_camera_super_buf_t *bufs,
           /* App will free the metadata */
           pme->metadata = malloc(sizeof(metadata_buffer_t));
           if (!pme->metadata) {
-              ALOGE("not enough memory\n");
+              LOGE("not enough memory\n");
               return;
           }
       }
