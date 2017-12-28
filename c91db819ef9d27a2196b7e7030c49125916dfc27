@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cc9d395_0115d128",
+        "filename": "sepolicy/qti_init_shell.te",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 13947
+      },
+      "writtenOn": "2017-12-28T09:22:18Z",
+      "side": 1,
+      "message": "Do not delete. Otherwise, when the bluetooth is turned on, call logs lost",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 61
+      },
+      "revId": "c91db819ef9d27a2196b7e7030c49125916dfc27",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
