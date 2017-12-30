@@ -60,7 +60,7 @@ vendor/lib64/soundfx/libqcbassboost.so
 vendor/lib64/soundfx/libqcreverb.so
 vendor/lib64/soundfx/libqcvirt.so
 
-# Audio ACDB - from stock
+# ACDB Audio - from stock 7.12.28
 etc/acdbdata/QRD/QRD_Bluetooth_cal.acdb|e2201e3034d833be75dd4334bb7a370d88df9f29
 etc/acdbdata/QRD/QRD_General_cal.acdb|de1a1d40dc243d8d327a77a8d66161e3ffb6c10c
 etc/acdbdata/QRD/QRD_Global_cal.acdb|e67935a573f06ee03992810546eea802a46852fc
@@ -772,21 +772,24 @@ vendor/lib64/libsecureuisvc_jni.so
 vendor/lib64/libssd.so
 vendor/lib64/libtzdrmgenprov.so
 
-# Display calibration - from stock
+# Display calibration - from stock 7.12.28
+-etc/qdcm_calib_data_ili9885_boe_fhd_video_mode_dsi_panel.xml|3b010d91f00c8cd91c49354a377a96685a184ad4
 -etc/qdcm_calib_data_nt35532_fhd_video_mode_dsi_panel.xml|d53c207e8e539fce377b4ff0486408013274f5b9
 -etc/qdcm_calib_data_nt35596_tianma_fhd_video_mode_dsi_panel.xml|1a3a22cb14dea4cf75167c5792d293dbb7f285e7
+-etc/qdcm_calib_data_otm1911_fhd_video_mode_dsi_panel.xml|9e06172cc6439f9eda5dc11ea76e835e01f02abf
+-etc/qdcm_calib_data_r63350_ebbg_fhd_video_mode_dsi_panel.xml|63c87454db9d4f7a457c7f415c9c57071d4ae97a
 
-# Fingerprint - from stock
+# Fingerprint - from stock 7.12.28
 bin/gx_fpd|b62f65c62788327cc4b9cd74535fa186c8ca2f1b
-lib/hw/fingerprint.searchf.so|d0cac931a087c51f2cd10836eec5bd3751919599
+lib/hw/fingerprint.searchf.so|7982f6bb46f65d7da03b2292cfb2a1f7e5a61867
 lib/libcom_fingerprints_service.so|77bbb0f60ed22d110096eaf1b934278da4af0316
-lib64/hw/fingerprint.goodix.so|9e70bd680e3960c43096699a802d8b5c56ff34d7
-lib64/hw/fingerprint.searchf.so|eb35d0fb951fda24046c11144270cf81670145ff
-lib64/hw/gxfingerprint.default.so|96112eb1cb7f0e3dd91d9f666f519fe14ae6433e
-lib64/libcom_fingerprints_service.so|3f66992c52a261078151377883a477ac98a88c47
+lib64/hw/fingerprint.goodix.so|71b85fd32069d9f22cbd5e2dfff1ca05ae5f26a9
+lib64/hw/fingerprint.searchf.so|6294b9f22e4f12070a17287a6e9ef7cb05d92f13
+lib64/hw/gxfingerprint.default.so|a2dbd386381b2c6bb2b1118d4f81b97c64242211
+lib64/libcom_fingerprints_service.so|91aa8cadbd114da1ba28df95048029ec510bb1d3
 lib64/libfp_client.so|d68f5881e85aef7a9beedee6cc2215c6b3d40d84
 lib64/libfpnav.so|588301735456b31b09aa0779a7f46481056868dd
-lib64/libfpservice.so|ed53ffb3610eb4791c4eacd9f790f74fa636da9c
+lib64/libfpservice.so|232b132bb58409db2e87a8f9c433bbc6c3a87c87
 
 # Gatekeeper
 vendor/lib/hw/gatekeeper.msm8953.so
@@ -1135,11 +1138,11 @@ vendor/lib64/libsensor_reg.so
 vendor/lib64/sensor_calibrate.so
 vendor/lib64/sensors.ssc.so
 
-# Thermal - from stock
+# Thermal - from stock 7.12.28
 vendor/bin/thermal-engine|6e354128853c34d757737586acd90550ee20d666
 vendor/lib/libthermalclient.so|78d068404db11533951308c58272d43a787d7e16
-vendor/lib64/libthermalclient.so|ead967ce93d379f673295b513ed9ef30f889e002
-vendor/lib64/libthermalioctl.so|ef41f69153713fce491af3e00db8c6f8dadfde00
+vendor/lib64/libthermalclient.so|1589944cb745db9949f057739ba4f7b0912b6a6d
+vendor/lib64/libthermalioctl.so|a6e8a3c3fa8294701cfd24c34a1e0e63ffca5f6d
 
 # Time services
 -app/TimeService/TimeService.apk
