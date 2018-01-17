@@ -101,6 +101,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     Snap
 
+# Consumerir
+PRODUCT_PACKAGES += \
+    consumerir.msm8953
+
 # Display
 PRODUCT_PACKAGES += \
     copybit.msm8953 \
