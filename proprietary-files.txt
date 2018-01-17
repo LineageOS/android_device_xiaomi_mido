@@ -1484,9 +1484,6 @@ etc/firmware/cpp_firmware_v1_12_0.fw
 # Charger
 bin/hvdcp_opti
 
-# Consumer Ir
-lib64/hw/consumerir.default.so
-
 # DPM
 bin/dpmd
 etc/dpm/dpm.conf
