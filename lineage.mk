@@ -24,9 +24,6 @@ $(call inherit-product, device/xiaomi/oxygen/full_oxygen.mk)
 PRODUCT_NAME := lineage_oxygen
 BOARD_VENDOR := Xiaomi
 
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.sys.timezone=Asia/Shanghai \
-
 PRODUCT_DEFAULT_LOCALE := zh_CN
 
 # Boot animation
