@@ -7141,14 +7141,6 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
                 available_hfr_configs.add(fps);
                 available_hfr_configs.add(fps / PREVIEW_FPS_FOR_HFR);
 
-                /* (width, height, fps_min, fps_max, batch_size_max) */
-                available_hfr_configs.add(
-                        gCamCapability[cameraId]->hfr_tbl[i].dim[j].width);
-                available_hfr_configs.add(
-                        gCamCapability[cameraId]->hfr_tbl[i].dim[j].height);
-                available_hfr_configs.add(fps);
-                available_hfr_configs.add(fps);
-                available_hfr_configs.add(fps / PREVIEW_FPS_FOR_HFR);
             }
        }
     }
