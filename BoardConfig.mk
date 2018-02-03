@@ -175,10 +175,6 @@ TARGET_RECOVERY_DEVICE_MODULES := libinit_mido
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
 
-# Lights
-BOARD_LIGHTS_VARIANT := aw2013
-TARGET_PROVIDES_LIBLIGHT := true
-
 # Lineage Hardware
 BOARD_HARDWARE_CLASS += \
     $(DEVICE_PATH)/lineagehw
