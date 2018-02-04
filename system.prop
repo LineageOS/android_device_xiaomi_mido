@@ -15,7 +15,6 @@ persist.audio.fluence.audiorec=false
 persist.audio.fluence.voicecall=true
 persist.audio.fluence.voicerec=true
 persist.audio.fluence.speaker=true
-persist.audio.fluence.spk.mono=true
 audio.offload.disable = true
 tunnel.audio.encode = false
 audio.offload.buffer.size.kb=64
