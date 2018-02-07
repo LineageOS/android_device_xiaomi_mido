@@ -185,9 +185,8 @@ on charger
     write /sys/devices/system/cpu/cpu2/online 0
     write /sys/devices/system/cpu/cpu3/online 0
     write /sys/module/lpm_levels/parameters/sleep_disabled 0
-    wait /dev/block/bootdevice/by-name/system
-    mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
     start hvdcp_opti
+    start thermal-engine
 
 on boot
 	write /dev/cpuset/top-app/cpus 0-7
