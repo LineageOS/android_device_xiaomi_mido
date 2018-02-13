@@ -201,9 +201,6 @@ TARGET_PER_MGR_ENABLED := true
 TARGET_HAS_NO_WIFI_STATS := true
 TARGET_TAP_TO_WAKE_NODE := "/proc/touchpanel/enable_dt2w"
 
-# Properties
-TARGET_SYSTEM_PROP := $(DEVICE_PATH)/system.prop
-
 # Qualcomm
 BOARD_USES_QCOM_HARDWARE := true
 TARGET_USE_SDCLANG := true

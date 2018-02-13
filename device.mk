@@ -272,6 +272,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.power@1.0-service-qti
 
+# Properties
+-include device/xiaomi/mido/prop.mk
+
 # QMI
 PRODUCT_PACKAGES += \
     libjson
