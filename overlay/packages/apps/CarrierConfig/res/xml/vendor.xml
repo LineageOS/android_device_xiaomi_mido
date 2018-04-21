@@ -47,6 +47,9 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="transmit_static_image" value="false" />
         <boolean name="config_enriched_call_capable" value="false" />
     </carrier_config>
+    <carrier_config mcc="226" mnc="05">
+        <boolean name="carrier_volte_available_bool" value="true" />
+    </carrier_config>
     <carrier_config mcc="222" mnc="01">
         <boolean name="config_display_wfc_mode" value="false" />
         <int name="carrier_default_wfc_ims_mode_int" value="2" />
