@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# Copyright (C) 2016 The CyanogenMod Project
 # Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,53 +17,11 @@
 
 set -e
 
-DEVICE=mido
-VENDOR=xiaomi
+# Required!
+export DEVICE=mido
+export DEVICE_COMMON=msm8953-common
+export VENDOR=xiaomi
 
-# Load extract_utils and do some sanity checks
-MY_DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
+export DEVICE_BRINGUP_YEAR=2017
 
-LINEAGE_ROOT="$MY_DIR"/../../..
-
-HELPER="$LINEAGE_ROOT"/vendor/lineage/build/tools/extract_utils.sh
-if [ ! -f "$HELPER" ]; then
-    echo "Unable to find helper script at $HELPER"
-    exit 1
-fi
-. "$HELPER"
-
-# Default to sanitizing the vendor folder before extraction
-CLEAN_VENDOR=true
-
-while [ "$1" != "" ]; do
-    case $1 in
-        -n | --no-cleanup )     CLEAN_VENDOR=false
-                                ;;
-        -s | --section )        shift
-                                SECTION=$1
-                                CLEAN_VENDOR=false
-                                ;;
-        * )                     SRC=$1
-                                ;;
-    esac
-    shift
-done
-
-if [ -z "$SRC" ]; then
-    SRC=adb
-fi
-
-# Initialize the helper
-setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT" false "$CLEAN_VENDOR"
-
-extract "$MY_DIR"/proprietary-files.txt "$SRC" "$SECTION"
-extract "$MY_DIR"/proprietary-files-qc.txt "$SRC" "$SECTION"
-
-# Hax for cam configs
-
-CAMERA2_SENSOR_MODULES="$LINEAGE_ROOT"/vendor/"$VENDOR"/"$DEVICE"/proprietary/vendor/lib/libmmcamera2_sensor_modules.so
-
-sed -i "s|/system/etc/camera/|/vendor/etc/camera/|g" "$CAMERA2_SENSOR_MODULES"
-
-"$MY_DIR"/setup-makefiles.sh
+./../../$VENDOR/$DEVICE_COMMON/extract-files.sh $@

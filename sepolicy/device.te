@@ -1,2 +1,0 @@
-type lirc_device, dev_type;
-type gx_fpd_device, dev_type;
