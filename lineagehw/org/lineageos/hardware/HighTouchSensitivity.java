@@ -25,7 +25,7 @@ public class HighTouchSensitivity {
     private static final String CONTROL_PATH = "/sys/class/tp_glove/device/glove_enable";
 
     public static boolean isSupported() {
-	return FileUtils.isFileWritable(CONTROL_PATH);
+        return FileUtils.isFileWritable(CONTROL_PATH);
     }
 
     public static boolean isEnabled() {
