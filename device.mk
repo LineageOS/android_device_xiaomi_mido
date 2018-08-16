@@ -31,7 +31,7 @@ PRODUCT_COPY_FILES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.0-service.xiaomi_mido
+    android.hardware.biometrics.fingerprint@2.1-service.xiaomi_mido
 
 # Consumerir
 PRODUCT_PACKAGES += \
