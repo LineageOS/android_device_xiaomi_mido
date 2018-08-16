@@ -46,7 +46,6 @@ BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 # Treble
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 PRODUCT_FULL_TREBLE_OVERRIDE := true
-PRODUCT_COMPATIBILITY_MATRIX_LEVEL_OVERRIDE := 27
 
 # Inherit from the proprietary version
 -include vendor/xiaomi/mido/BoardConfigVendor.mk
