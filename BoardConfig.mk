@@ -27,8 +27,7 @@ TARGET_COPY_OUT_VENDOR := vendor
 TARGET_KERNEL_CONFIG := mido_defconfig
 
 # Lineage Hardware
-BOARD_HARDWARE_CLASS += \
-    $(DEVICE_PATH)/lineagehw
+JAVA_SOURCE_OVERLAYS := org.lineageos.hardware|$(VENDOR_PATH)/lineagehw|**/*.java
 
 # Partitions
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
