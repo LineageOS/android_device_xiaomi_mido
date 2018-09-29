@@ -49,7 +49,7 @@ LOCAL_MODULE:= camera_test
 LOCAL_MODULE_TAGS:= tests
 LOCAL_VENDOR_MODULE := true
 
-LOCAL_CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
+LOCAL_CFLAGS += -Wall -Wextra -Wno-unused-parameter
 LOCAL_CFLAGS += -O0
 
 ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) >= 20 ))" )))

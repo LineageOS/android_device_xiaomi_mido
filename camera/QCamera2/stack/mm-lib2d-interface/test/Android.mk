@@ -8,7 +8,7 @@ LOCAL_PATH := $(MM_LIB2D_TEST_PATH)
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_CFLAGS := -DCAMERA_ION_HEAP_ID=ION_IOMMU_HEAP_ID
-LOCAL_CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
+LOCAL_CFLAGS += -Wall -Wextra -Wno-unused-parameter
 LOCAL_CFLAGS += -D_ANDROID_
 
 ifeq ($(strip $(TARGET_USES_ION)),true)
