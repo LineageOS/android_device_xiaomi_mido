@@ -15,7 +15,7 @@ allow hal_fingerprint_mido uhid_device:chr_file rw_file_perms;
 allow hal_fingerprint_mido fpc_data_file:dir rw_dir_perms;
 allow hal_fingerprint_mido fpc_data_file:sock_file create_file_perms;
 allow hal_fingerprint_mido servicemanager:binder { transfer call };
-allow hal_fingerprint_mido fingerprintd_data_file:dir { write add_name remove_name };
+allow hal_fingerprint_mido fingerprintd_data_file:dir { write add_name remove_name search};
 allow hal_fingerprint_mido fingerprintd_data_file:file { getattr rename };
 allow hal_fingerprint_mido vfat:file { getattr open read };
 allow hal_fingerprint_mido fingerprintd_data_file:file unlink;
