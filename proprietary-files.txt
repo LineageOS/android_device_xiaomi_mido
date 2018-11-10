@@ -7,6 +7,11 @@ etc/acdbdata/QRD/QRD_Hdmi_cal.acdb:vendor/etc/acdbdata/QRD/QRD_Hdmi_cal.acdb
 etc/acdbdata/QRD/QRD_Headset_cal.acdb:vendor/etc/acdbdata/QRD/QRD_Headset_cal.acdb
 etc/acdbdata/QRD/QRD_Speaker_cal.acdb:vendor/etc/acdbdata/QRD/QRD_Speaker_cal.acdb
 
+# Audio Dirac
+lib/soundfx/libdirac.so
+lib/libDiracAPI_SHARED.so
+vendor/etc/diracmobile.config
+
 # Camera
 bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
 vendor/lib/libChamomilePA.so
