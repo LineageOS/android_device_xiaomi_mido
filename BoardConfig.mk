@@ -49,5 +49,8 @@ BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 PRODUCT_FULL_TREBLE_OVERRIDE := true
 
+# Vendor Security Patch
+VENDOR_SECURITY_PATCH := 2019-01-05
+
 # Inherit from the proprietary version
 -include vendor/xiaomi/mido/BoardConfigVendor.mk
