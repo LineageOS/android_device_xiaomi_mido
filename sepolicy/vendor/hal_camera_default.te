@@ -1,0 +1,2 @@
+allow hal_camera_default camera_data_file:dir search;
+allow hal_camera_default camera_socket:sock_file write;
