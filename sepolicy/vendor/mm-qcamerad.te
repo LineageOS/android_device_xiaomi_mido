@@ -1,0 +1,1 @@
+allow mm-qcamerad camera_data_file:sock_file unlink;
