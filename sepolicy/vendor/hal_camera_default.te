@@ -1,2 +1,4 @@
+typeattribute hal_camera_default data_between_core_and_vendor_violators;
+
 allow hal_camera_default camera_data_file:dir search;
 allow hal_camera_default camera_socket:sock_file write;

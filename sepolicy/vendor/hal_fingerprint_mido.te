@@ -1,4 +1,5 @@
 type hal_fingerprint_mido, domain, binder_in_vendor_violators;
+typeattribute hal_fingerprint_mido data_between_core_and_vendor_violators;
 hal_server_domain(hal_fingerprint_mido, hal_fingerprint)
 
 type hal_fingerprint_mido_exec, exec_type, vendor_file_type, file_type;
@@ -9,7 +10,7 @@ allow hal_fingerprint_mido gx_fpd:binder { transfer call };
 allow hal_fingerprint_mido gx_fpd_service:service_manager find;
 allow hal_fingerprint_mido fingerprint_service:service_manager find;
 allow hal_fingerprint_mido fpc_sysfs:file rw_file_perms;
-allow hal_fingerprint_mido fpc_sysfs:dir rw_dir_perms;
+allow hal_fingerprint_mido fpc_sysfs:dir r_dir_perms;
 allow hal_fingerprint_mido tee_device:chr_file rw_file_perms;
 allow hal_fingerprint_mido uhid_device:chr_file rw_file_perms;
 allow hal_fingerprint_mido fpc_data_file:dir rw_dir_perms;
