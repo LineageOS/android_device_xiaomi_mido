@@ -1,0 +1,2 @@
+# Power
+genfscon sysfs /devices/soc/msm-bcl-20/power_supply                  u:object_r:sysfs_batteryinfo:s0
