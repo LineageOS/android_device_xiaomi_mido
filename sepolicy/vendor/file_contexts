@@ -1,6 +1,3 @@
-# Block devices
-/dev/block/mmcblk0p26				u:object_r:persist_block_device:s0
-
 # Glove Mode
 /sys/class/tp_glove/tp_glove/glove_enable	u:object_r:proc_touchpanel:s0
 
