@@ -7,10 +7,6 @@
 # Goodix Fingerprint
 /(vendor|system/vendor)/bin/gx_fpd		u:object_r:gx_fpd_exec:s0
 
-# Input files
-/(vendor|system/vendor)/usr/idc(/.*)?		u:object_r:idc_file:s0
-/(vendor|system/vendor)/usr/keylayout(/.*)?	u:object_r:keylayout_file:s0
-
 # Ir
 /dev/lirc[0-9]*					u:object_r:lirc_device:s0
 
