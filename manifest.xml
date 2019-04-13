@@ -7,5 +7,9 @@
             <name>IKeyDisabler</name>
             <instance>default</instance>
         </interface>
+        <interface>
+            <name>IGloveMode</name>
+            <instance>default</instance>
+        </interface>
     </hal>
 </manifest>
