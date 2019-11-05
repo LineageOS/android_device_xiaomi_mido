@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cfef04a7_96c69431",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 18052
+      },
+      "writtenOn": "2019-11-05T16:06:00Z",
+      "side": 1,
+      "message": "Reason for revert: Another port already uses this subdirectory name to check out a different repo. The build infrastructure needs to use uniquely named subdirectories for each unique repo that it checks out.",
+      "revId": "06785228571b32d8e2bcbee5cbff98ffe8ca9eeb",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}
